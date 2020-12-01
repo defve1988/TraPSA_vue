@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <span class="subtitle-1">{{upload_card.title}}</span>
+      <span class="subtitle-1">{{ upload_card.title }}</span>
     </v-card-title>
     <v-card-text>
       <v-file-input
@@ -10,7 +10,12 @@
         :label="upload_card.label"
         prepend-icon="mdi-paperclip"
       ></v-file-input>
-      <v-btn color="primary" class="text-none" :loading="isloading" @click="upload_data">
+      <v-btn
+        color="primary"
+        class="text-none"
+        :loading="isloading"
+        @click="upload_data"
+      >
         <v-icon left>mdi-cloud-upload</v-icon>Upload
       </v-btn>
     </v-card-text>

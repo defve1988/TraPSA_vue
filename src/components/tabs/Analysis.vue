@@ -3,9 +3,7 @@
     <v-container class="px-10 pt-1 pb-0">
       <v-row>
         <v-col cols="3" class="mt-2 px-0">
-          <v-card
-            height="710px"
-          >
+          <v-card height="725px">
             <v-card-title
               class="pa-1 px-4 title primary lighten-2 font-weight-regular white--text"
             >
@@ -58,7 +56,7 @@
         <v-col cols="9">
           <v-row dense>
             <v-col
-              class="pa-2"
+              class="px-2 py-3"
               v-for="(fig, i) in figs"
               :key="i"
               cols="3"
@@ -70,7 +68,7 @@
                 <v-card
                   :height="fig_height"
                   @click="enlarge(fig.id)"
-                  :elevation="hover ? 16 : 2"
+                  :elevation="hover ? 16:2"
                 >
                   <v-card-title
                     class="justify-center pt-2 pa-0 subtitle-1 font-weight-light"
@@ -86,7 +84,7 @@
                     <sheet-footer>No content can be dsiplayed</sheet-footer>
                   </v-sheet>
 
-                  <div :id="fig.id" class="my_dataviz mx-2 py-0 my-0"></div>
+                  <div :ref="'my_'+fig.id" :id="fig.id" class="my_dataviz mx-0 py-0 my-0"></div>
                 </v-card>
               </v-hover>
             </v-col>
@@ -94,6 +92,13 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <v-dialog v-model="app_data.ui_control.new_case.show" width="800">
+      <CaseSelect @data_edited="case_selected"/>
+    </v-dialog>
+    <v-dialog v-model="app_data.ui_control.fig_view.show" width="1200">
+      <FigureView />
+    </v-dialog>
   </v-card>
 </template>
 
@@ -104,6 +109,8 @@ import data_process from "@/assets/js/data_process";
 export default {
   name: "analysis",
   components: {
+    CaseSelect: () => import("@/components/dialogs/CaseSelect.vue"),
+    FigureView: () => import("@/components/dialogs/FigureView.vue"),
     SheetFooter: {
       functional: true,
       render(h, { children }) {
@@ -141,7 +148,7 @@ export default {
   }),
   // this is important to let ui automatically update when new case is added
   watch: {
-    selected: function () {
+    selected() {
       this.case_selected();
     },
   },
@@ -202,9 +209,18 @@ export default {
       };
     },
     case_selected() {
+      // alert(1)
       var index_temp = this.selected;
       var item = this.app_data.case[index_temp];
       this.plot_case = new PlotCase(item.name);
+
+      var fig_size ={
+        width: this.$refs.my_histgram[0].clientWidth,
+        height: 180,
+      }
+      console.log(fig_size)
+      var fig_margin = { r: 20, t: 25, b: 25, l: 30 }
+      this.plot_case.set_fig_size("small", fig_size, fig_margin)
 
       this.app_data.ui_control.isLoading = "primary lighten-2";
 

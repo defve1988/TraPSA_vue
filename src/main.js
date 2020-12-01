@@ -4,8 +4,10 @@ import router from './router'
 import store from './store'
 import VueWorker from 'vue-worker';
 import vuetify from './plugins/vuetify';
+import fullscreen from 'vue-fullscreen'
 
 Vue.use(VueWorker)
+Vue.use(fullscreen)
 Vue.config.productionTip = false
 
 var env = 'loacl';

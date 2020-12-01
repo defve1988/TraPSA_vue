@@ -19,11 +19,11 @@ export default class PlotCase {
         this.case_name = case_name;
 
         this.small_fig = { width: 300, height: 180 }
-        this.medium_fig = { width: 600, height: 400 }
+        this.medium_fig = { width: 750, height: 400 }
         this.large_fig = { width: 1180, height: 600 }
 
         this.small_margin = { r: 20, t: 25, b: 25, l: 20 }
-        this.medium_margin = { r: 20, t: 25, b: 25, l: 20 }
+        this.medium_margin = { r: 20, t: 50, b: 25, l: 20 }
         this.large_margin = { r: 100, t: 50, b: 75, l: 125 }
 
         this.color_theme = [
@@ -370,7 +370,7 @@ export default class PlotCase {
                     direction: "clockwise",
                     tickwidth: 2,
                     linewidth: 3,
-                    layer: "below traces"
+                    layer: "above traces"
                 },
             }
         }

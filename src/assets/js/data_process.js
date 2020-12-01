@@ -12,12 +12,30 @@ export default {
     data_cal_pscf
 }
 
-function data_cal_pscf(){
+function data_cal_pscf() {
 
 }
 
 function data_cal_cpf(measurement, wind, threshold = 0.7) {
     var directions = [
+        { d: "N", lower: 348.75, upper: 11.25 },
+        { d: "NNE", lower: 11.25, upper: 33.75 },
+        { d: "NE", lower: 33.75, upper: 56.25 },
+        { d: "ENE", lower: 56.25, upper: 78.75 },
+        { d: "E", lower: 78.75, upper: 101.25 },
+        { d: "ESE", lower: 101.25, upper: 123.75 },
+        { d: "SE", lower: 123.75, upper: 146.25 },
+        { d: "SSE", lower: 146.25, upper: 168.75 },
+        { d: "S", lower: 168.75, upper: 191.25 },
+        { d: "SSW", lower: 191.25, upper: 213.75 },
+        { d: "SW", lower: 213.75, upper: 236.25 },
+        { d: "WSW", lower: 236.25, upper: 258.75 },
+        { d: "W", lower: 258.75, upper: 281.25 },
+        { d: "WNS", lower: 281.25, upper: 303.75 },
+        { d: "NW", lower: 303.75, upper: 326.25 },
+        { d: "NNW", lower: 326.25, upper: 348.75 }]
+
+    directions = [
         { d: "N", lower: 348.75, upper: 11.25 },
         { d: "NNE", lower: 11.25, upper: 33.75 },
         { d: "NE", lower: 33.75, upper: 56.25 },
@@ -102,12 +120,49 @@ function data_cal_cpf(measurement, wind, threshold = 0.7) {
     // - color map 
     // - layer order
     var color_map = [
-        { value: 0.2, color: '#2F528F' },
-        { value: 0.15, color: '#A0DAB7' },
-        { value: 0.1, color: '#1F93C0' },
+        { value: 0.3, color: '#8ef5b7' },
+        { value: 0.2, color: '#A0DAB7' },
+        { value: 0.15, color: '#1F93C0' },
+        { value: 0.1, color: '#2F528F' },
         { value: 0.05, color: '#162876' },
     ]
-    const theta = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNS", "NW", "NNW"]
+    // const theta = {
+    //     "N": 0,
+    //     "NNE": 22.5,
+    //     "NE": 45,
+    //     "ENE": 67.5,
+    //     "E": 90,
+    //     "ESE": 112.5,
+    //     "SE": 135,
+    //     "SSE": 157.5,
+    //     "S": 180,
+    //     "SSW": 202.5,
+    //     "SW": 225,
+    //     "WSW": 247.5,
+    //     "W": 270,
+    //     "WNS": 292.5,
+    //     "NW": 315,
+    //     "NNW": 337.5
+    // }
+
+    const theta = [
+        0,
+        22.5,
+        45,
+        67.5,
+        90,
+        112.5,
+        135,
+        157.5,
+        180,
+        202.5,
+        225,
+        247.5,
+        270,
+        292.5,
+        315,
+        337.5
+    ]
 
     var cbpf = []
     for (let c = 0; c < color_map.length; c++) {
@@ -118,7 +173,8 @@ function data_cal_cpf(measurement, wind, threshold = 0.7) {
             mode: "markers",
             marker: {
                 color: color_map[c].color,
-                size: 10 + c * 5,
+                // size: 10 + c * 5,
+                size: 30,
                 line: {
                     color: "white"
                 },
@@ -126,27 +182,35 @@ function data_cal_cpf(measurement, wind, threshold = 0.7) {
             },
             cliponaxis: false
         }
+        if (c == 0) {
+            trace.r = Array(16).fill(0)
+            trace.theta = theta
+        }
         cbpf.push(trace)
     }
     // console.log(count_high, count_all)
     for (let i = 0; i < cbpf_high.length; i++) {
-        for (let j = 1; j < cbpf_high[i].r.length; j++) {
+        for (let j = 0; j < cbpf_high[i].r.length; j++) {
             var value = cbpf_high[i].r[j] / cbpf_all[i].r[j]
-            if (value > 0.2) {
+            if (value > 0.3) {
                 cbpf[0].r.push(i)
                 cbpf[0].theta.push(theta[j])
             }
-            else if (value > 0.15) {
+            else if (value > 0.2) {
                 cbpf[1].r.push(i)
                 cbpf[1].theta.push(theta[j])
             }
-            else if (value > 0.1) {
+            else if (value > 0.15) {
                 cbpf[2].r.push(i)
                 cbpf[2].theta.push(theta[j])
             }
-            else {
+            else if (value > 0.1) {
                 cbpf[3].r.push(i)
                 cbpf[3].theta.push(theta[j])
+            }
+            else {
+                cbpf[4].r.push(i)
+                cbpf[4].theta.push(theta[j])
             }
         }
 
@@ -183,7 +247,7 @@ function data_cal_cpf(measurement, wind, threshold = 0.7) {
         }
     }
     // console.log(new Date - tic)
-    // console.log(res)
+    // console.log(res.cbpf)
     return res
 }
 
@@ -271,50 +335,6 @@ function data_cal_windrose(wind) {
     return wind_rose.reverse()
 }
 
-async function data_reduce() {
-    // return the reduced the data with reduce_func for reduce_col
-    // data: app_data.measurement.data
-    // reduce_col: "year"
-    // reduce_func: mean
-    // reduced: average conc for each year
-
-    // data, reduce_col, reduce_func
-}
-
-async function data_merge() {
-    // merge two data with the same timestamp and site
-}
-
-async function data_filter(data, data_filter) {
-    // return filtered data with data_filter
-    // data: app_data.measurement.data
-    // data_filter: {"site":["x1"],"year":["y1","y2"]}
-    // data and data_filter should have same keys
-    // filtered: the measurment data for site x1 at y1 and y2
-
-    let filtered = data
-    for (var k in data_filter) {
-        filtered = filtered.filter(item => { return data_filter[k].includes(item[k]) })
-    }
-    return filtered
-
-}
-
-function data_filter_2(data, data_filter) {
-    // return filtered data with data_filter
-    // data: app_data.measurement.data
-    // data_filter: {"site":["x1"],"year":["y1","y2"]}
-    // data and data_filter should have same keys
-    // filtered: the measurment data for site x1 at y1 and y2
-
-    let filtered = data
-    for (var k in data_filter) {
-        filtered = filtered.filter(item => { return data_filter[k].includes(item[k]) })
-    }
-    return filtered
-
-}
-
 function sen_slope() {
 
 
@@ -324,7 +344,7 @@ function cal_period_avg(data, period) {
     function getDeviation(array) {
         const n = array.length
         const mean = array.reduce((a, b) => a + b) / n
-        return array.map(x => (x - mean)*(x - mean)).reduce((a, b) => a + b) / n
+        return array.map(x => (x - mean) * (x - mean)).reduce((a, b) => a + b) / n
     }
     var res = data.reduce((prev, curr) => {
         var year = curr.x.getFullYear()
@@ -398,7 +418,7 @@ function linearRegression(y, x) {
         sum_yy += (y[i] * y[i]);
     }
 
-    
+
     lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
     lr['intercept'] = (sum_y - lr.slope * sum_x) / n;
     lr['r2'] = Math.pow((n * sum_xy - sum_x * sum_y) / Math.sqrt((n * sum_xx - sum_x * sum_x) * (n * sum_yy - sum_y * sum_y)), 2);
@@ -412,4 +432,49 @@ function linearRegression(y, x) {
         y2: max * lr.slope + lr.intercept,
     }
     return lr;
+}
+
+
+async function data_reduce() {
+    // return the reduced the data with reduce_func for reduce_col
+    // data: app_data.measurement.data
+    // reduce_col: "year"
+    // reduce_func: mean
+    // reduced: average conc for each year
+
+    // data, reduce_col, reduce_func
+}
+
+async function data_merge() {
+    // merge two data with the same timestamp and site
+}
+
+async function data_filter(data, data_filter) {
+    // return filtered data with data_filter
+    // data: app_data.measurement.data
+    // data_filter: {"site":["x1"],"year":["y1","y2"]}
+    // data and data_filter should have same keys
+    // filtered: the measurment data for site x1 at y1 and y2
+
+    let filtered = data
+    for (var k in data_filter) {
+        filtered = filtered.filter(item => { return data_filter[k].includes(item[k]) })
+    }
+    return filtered
+
+}
+
+function data_filter_2(data, data_filter) {
+    // return filtered data with data_filter
+    // data: app_data.measurement.data
+    // data_filter: {"site":["x1"],"year":["y1","y2"]}
+    // data and data_filter should have same keys
+    // filtered: the measurment data for site x1 at y1 and y2
+
+    let filtered = data
+    for (var k in data_filter) {
+        filtered = filtered.filter(item => { return data_filter[k].includes(item[k]) })
+    }
+    return filtered
+
 }

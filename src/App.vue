@@ -118,15 +118,8 @@
     <v-dialog v-model="app_data.ui_control.data_view" width="1000">
       <DataView />
     </v-dialog>
-    <v-dialog v-model="app_data.ui_control.fig_view.show" width="1200">
-      <FigureView />
-    </v-dialog>
-    <v-dialog v-model="app_data.ui_control.new_case.show" width="800">
-      <CaseSelect />
-    </v-dialog>
-    <!-- <v-dialog v-model="app_data.ui_control.new_source_layer.show" width="800">
-      <PSCFDialog />
-    </v-dialog> -->
+
+
   </v-app>
 </template>
 
@@ -136,18 +129,15 @@ import data_format from "@/assets/js/data_format";
 export default {
   name: "App",
   components: {
-    About: () => import("@/tabs/About.vue"),
-    Source: () => import("@/tabs/Source.vue"),
-    Trajectory: () => import("@/tabs/Trajectory.vue"),
-    Analysis: () => import("@/tabs/Analysis.vue"),
-    Upload: () => import("@/tabs/Upload.vue"),
-    Message: () => import("@/components/Message.vue"),
-    MetedataDialog: () => import("@/components/MetedataDialog.vue"),
-    MeteDataRequired: () => import("@/components/MeteDataRequired.vue"),
-    DataView: () => import("@/components/DataView.vue"),
-    FigureView: () => import("@/components/FigureView.vue"),
-    CaseSelect: () => import("@/components/CaseSelect.vue"),
-    // PSCFDialog: () => import("@/components/PSCFDialog.vue"),
+    About: () => import("@/components/tabs/About.vue"),
+    Source: () => import("@/components/tabs/Source.vue"),
+    Trajectory: () => import("@/components/tabs/Trajectory.vue"),
+    Analysis: () => import("@/components/tabs/Analysis.vue"),
+    Upload: () => import("@/components/tabs/Upload.vue"),
+    Message: () => import("@/components/dialogs/Message.vue"),
+    MetedataDialog: () => import("@/components/dialogs/MetedataDialog.vue"),
+    MeteDataRequired: () => import("@/components/dialogs/MeteDataRequired.vue"),
+    DataView: () => import("@/components/dialogs/DataView.vue"),
   },
   computed: {
     ...mapState({
@@ -220,7 +210,7 @@ export default {
 </script>
 
 <style>
-.span {
+.span{
   display: inline-block;
   vertical-align: bottom;
 }

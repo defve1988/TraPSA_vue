@@ -4,12 +4,24 @@
       <v-stepper v-model="e1" class="mt-5">
         <!-- stepper header -->
         <v-stepper-header height="100px" class="px-5">
-          <v-stepper-step :rules="isStep1" color="primary lighten-2" :complete="e1 > 1" step="1">
+          <v-stepper-step
+            :rules="isStep1"
+            color="primary lighten-2"
+            :complete="e1 > 1"
+            step="1"
+          >
             Site Locations
-            <small v-if="!isStep1[0]()">Please Upload Site location Data.</small>
+            <small v-if="!isStep1[0]()"
+              >Please Upload Site location Data.</small
+            >
           </v-stepper-step>
           <v-divider></v-divider>
-          <v-stepper-step color="primary lighten-2" :complete="e1 > 2" step="2" :rules="isStep2">
+          <v-stepper-step
+            color="primary lighten-2"
+            :complete="e1 > 2"
+            step="2"
+            :rules="isStep2"
+          >
             Upload Measurement Data
             <small v-if="!isStep2[0]()">Please Upload Measurement Data.</small>
           </v-stepper-step>
@@ -25,12 +37,14 @@
           <!-- upload site data -->
           <v-stepper-content step="1">
             <v-card :height="stepper_height">
-              <v-card :height="stepper_height-80" flat>
+              <v-card :height="stepper_height - 80" flat>
                 <v-row justify="center">
                   <v-col cols="4" class="pa-1">
                     <v-row>
                       <v-col cols="12" class="ml-3">
-                        <upload_card :upload_card="upload_site" />
+                        <upload_card
+                          :upload_card="upload_site"
+                        />
                       </v-col>
                     </v-row>
                     <v-row>
@@ -48,7 +62,11 @@
                   </v-col>
                   <v-col cols="8" class="px-5 pt-1">
                     <v-container>
-                      <div id="map_div" class="my_dataviz"></div>
+                      <map_card
+                        :button_not_uesd="button_not_uesd"
+                        :card_height="475"
+                        :map_card_type="'site_preview'"
+                      />
                     </v-container>
                   </v-col>
                 </v-row>
@@ -60,7 +78,7 @@
           <!-- upload measurement data -->
           <v-stepper-content step="2">
             <v-card :height="stepper_height">
-              <v-card :height="stepper_height-80" flat>
+              <v-card :height="stepper_height - 80" flat>
                 <v-row justify="center">
                   <v-col cols="4" class="pa-1">
                     <v-row>
@@ -79,7 +97,9 @@
                           <v-card-title>
                             <span class="subtitle-1">Datetime Formats</span>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" @click="dateFromat_check">Check</v-btn>
+                            <v-btn color="primary" @click="dateFromat_check"
+                              >Check</v-btn
+                            >
                           </v-card-title>
                           <v-text-field
                             class="px-5 py-2"
@@ -119,7 +139,7 @@
           <!-- upload wind data -->
           <v-stepper-content step="3">
             <v-card :height="stepper_height">
-              <v-card :height="stepper_height-80" flat>
+              <v-card :height="stepper_height - 80" flat>
                 <v-row justify="center">
                   <v-col cols="4" class="pa-1">
                     <v-row>
@@ -130,10 +150,6 @@
                     <v-row>
                       <v-col cols="12" class="ml-3">
                         <v-card class="pa-3">
-                          <!-- <v-card-title>
-                            <span class="subtitle-1">Data Preview</span>
-                            <v-spacer></v-spacer>
-                          </v-card-title>-->
                           <v-data-table
                             :headers="app_data.wind_data.header"
                             :items="app_data.wind_data.data"
@@ -168,11 +184,12 @@ import { mapState } from "vuex";
 export default {
   name: "App",
   components: {
-    upload_card: () => import("@/components/UploadCard.vue"),
-    // map_view: () => import("@/components/MapView.vue"),
-    wind_rose: () => import("@/components/WindRose.vue"),
+    upload_card: () => import("@/components/widgets/UploadCard.vue"),
+    map_card: () => import("@/components/widgets/MapCard.vue"),
+    wind_rose: () => import("@/components/widgets/WindRose.vue"),
   },
   data: () => ({
+    button_not_uesd: [2, 3, 4, 5, 6],
     e1: 1,
     stepper_height: 600,
     isStep1: [() => true],
@@ -227,11 +244,12 @@ export default {
       if (this.app_data.wind_data.data.length == 0) {
         this.app_data.i_control.snackbar = {
           show: true,
-          text: "You did not upload wind data, CPF and CBPF analysis will not be avaiable!",
+          text:
+            "You did not upload wind data, CPF and CBPF analysis will not be avaiable!",
           color: "warning",
         };
       }
-      this.app_data.ui_control.curr_tab +=1;
+      this.app_data.ui_control.curr_tab += 1;
     },
     dateFromat_check() {
       let isvalid = Date.parse(this.date_example);
@@ -246,10 +264,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.my_dataviz {
-  height: 80%;
-  width: 100%;
-}
-</style>

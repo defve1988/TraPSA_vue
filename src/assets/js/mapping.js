@@ -38,14 +38,33 @@ export default class Mapping {
         };
     }
 
+    // init layout, not redraw
     set_layout(layout) {
         Object.assign(this.layout, layout)
     }
-
+    // init config, not redraw
     set_config(config) {
         Object.assign(this.config, config)
     }
+    
+    // update mapbox config and redraw
+    update_map(map_config) {
+        this.layout.mapbox = Object.assign(this.layout.mapbox, map_config)
+        Plotly.relayout(this.div, this.layout);
+    }
 
+    // update layout and redraw
+    update_layout(layout) {
+        this.set_layout(layout)
+        Plotly.relayout(this.div, layout);
+    }
+
+    // add new data trace
+    add_trace(data) {
+        Plotly.addTraces(this.div, data);
+    }
+
+    // init map
     plot_map(map_config) {
         this.set_layout({ mapbox: map_config })
         Plotly.newPlot(this.div, [{
@@ -53,18 +72,34 @@ export default class Mapping {
         }], this.layout, this.config);
     }
 
-    update_map(map_config) {
-        this.layout.mapbox = map_config
-        Plotly.relayout(this.div, this.layout);
+    // plot dots with text (location = show_text)
+    plot_dot(lat, lon, text, show_text = null) {
+        var data = [
+            {
+                type: "scattermapbox",
+                text: text,
+                lon: lon,
+                lat: lat,
+                marker: { color: "rgb(0, 150, 100)", size: 12, opacity: 0.5 }
+            }
+        ];
+
+        if (show_text!=null) {
+            data = data.map(x => { 
+                x.mode = 'markers+text', 
+                x.textposition = show_text; 
+                return x })
+        }
+
+        var map_config = {
+            zoom: 4,
+            center: { lat: cal_mean(lat), lon: cal_mean(lon) }
+        }
+        this.add_trace(data)
+        this.update_map(map_config)
+        this.update_layout({ showlegend: false })
     }
 
-    add_trace(data) {
-        Plotly.addTraces(this.div, data);
-    }
-
-    plot_dot() {
-
-    }
 
     plot_heat_map(data) {
         data = [
@@ -131,7 +166,7 @@ export default class Mapping {
         //     { n: 1, w: 0.75 },
         //     { n: 1.5, w: 0.9 },
         //   ],
-        total = total/z.length
+        total = total / z.length
         weight = weight.map(x => { return { n: x.n * total, w: x.w } })
         console.log(weight)
         console.log(count)
@@ -163,11 +198,7 @@ export default class Mapping {
         return grid_lat
     }
 
-    plot_test() {
-
-    }
-
-    save_image(file_name="map") {
+    save_image(file_name = "map") {
         Plotly.toImage(
             this.div, {
             format: 'png',
@@ -177,8 +208,14 @@ export default class Mapping {
             function (url) {
                 var pom = document.createElement("a");
                 pom.href = url;
-                pom.setAttribute("download", file_name+".png");
+                pom.setAttribute("download", file_name + ".png");
                 pom.click();
             });
     }
+}
+
+function cal_mean(arr) {
+    arr = arr.map(Number);
+    const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+    return avg
 }

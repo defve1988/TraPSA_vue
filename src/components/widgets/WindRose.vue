@@ -18,9 +18,9 @@
       </v-row>
 
       <v-row>
-        <v-col>
+        <v-col class="justify-center">
           <!-- <v-skeleton-loader v-if="isLoading" type="card" max-width="300" class="mx-auto py-10"></v-skeleton-loader> -->
-          <div id="my_figure" class="my_dataviz mx-auto my-auto"></div>
+          <div id="my_figure" class="my_dataviz mx-auto my-1"></div>
         </v-col>
       </v-row>
     </v-card>
@@ -48,6 +48,7 @@ export default {
     // this.isLoading = true;
     this.plot_case = new PlotCase('wind_rose');
     this.plot_case.plot_windrose("my_figure", null, "medium");
+    this.plot_case.set_fig_size
     // this.isLoading = false;
   },
   computed: {

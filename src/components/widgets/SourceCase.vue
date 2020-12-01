@@ -1,5 +1,5 @@
 <template>
-  <v-card height="700">
+  <v-card height="725">
     <v-card-title
       class="pa-1 px-4 title primary lighten-2 font-weight-regular white--text"
     >
@@ -74,6 +74,9 @@
         </v-list-item>
       </v-list-group>
     </v-list>
+    <v-dialog v-model="app_data.ui_control.new_case.show" width="800">
+      <CaseSelect @data_edited="case_selected" />
+    </v-dialog>
   </v-card>
 </template>
 
@@ -81,7 +84,9 @@
 import { mapState } from "vuex";
 export default {
   name: "map_layer",
-  components: {},
+  components: {
+    CaseSelect: () => import("@/components/dialogs/CaseSelect.vue"),
+  },
   data: () => ({
     model_type: ["CPF", "CFA", "CWT", "RTWC", "PSCF", "SQTBA"],
   }),

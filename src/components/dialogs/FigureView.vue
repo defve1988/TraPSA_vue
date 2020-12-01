@@ -20,6 +20,7 @@
                   v-model="selected"
                   :items="items"
                   label="Select Cases"
+                  class="ml-2"
                   chips
                   multiple
                   v-bind="attrs"
@@ -52,7 +53,7 @@
               v-model="app_data.parameters.cpf"
               :label="'Criteria: '+ app_data.parameters.cpf.toFixed(2)"
               thumb-color="primary"
-              thumb-label="true"
+              :thumb-label="true"
               color="primary"
               track-color="primary lighten-3"
               max="1"
@@ -70,7 +71,7 @@
               v-model="app_data.parameters.cbpf"
               :label="'Criteria: '+ app_data.parameters.cbpf.toFixed(2)"
               thumb-color="primary"
-              thumb-label="true"
+              :thumb-label="true"
               color="primary"
               track-color="primary lighten-3"
               max="1"
@@ -92,7 +93,7 @@
         <v-row align-self="center">
           <v-carousel
             v-model="carousel_index"
-            show-arrows-on-hover
+            hide-delimiters
             @change="show_fig()"
             height="651"
           >
@@ -382,6 +383,7 @@ export default {
               [this.app_data.parameters.cbpf],
             ])
             .then((res) => {
+              console.log(res.cbpf)
               this.plot_case.plot_cbpf(
                 "fig_detail_" + this.fig_ID,
                 res.cbpf,

@@ -432,8 +432,9 @@ export default {
     add_new_case() {
       // TODO: deal with edit case
       var selected_site = this.app_data.ui_control.new_case.selection.site;
-      var selected_chemical = this.app_data.ui_control.new_case.selection
-        .chemical;
+      var selected_chemical = [].concat(
+        this.app_data.ui_control.new_case.selection.chemical
+      );
       var selected_year = this.app_data.ui_control.new_case.selection.year;
 
       var selected_month = this.cal_case_selected_month();
@@ -461,7 +462,8 @@ export default {
         }
         return prev;
       }, []);
-      for (const chemical of selected_chemical) {
+
+      for (var chemical of selected_chemical) {
         var measurement = this.app_data.measurement.data.reduce(function (
           prev,
           curr
@@ -484,10 +486,13 @@ export default {
         []);
 
         var new_case = {
+          // if edit mode, keep the original name
           name:
-            this.app_data.ui_control.new_case.selection.case_name +
-            "_" +
-            chemical,
+            this.app_data.ui_control.new_case.edit == -1
+              ? this.app_data.ui_control.new_case.selection.case_name +
+                "_" +
+                chemical
+              : this.app_data.ui_control.new_case.selection.case_name,
           chemical: chemical,
           site: this.app_data.ui_control.new_case.selection.site,
           selected: false,
@@ -506,7 +511,7 @@ export default {
           model: {
             type: "PSCF",
             c: 0.8,
-            grid:0.25,
+            grid: 0.25,
             weight: [
               { n: 0.25, w: 0.1 },
               { n: 0.5, w: 0.25 },
@@ -514,8 +519,11 @@ export default {
               { n: 1, w: 0.75 },
               { n: 1.5, w: 0.9 },
             ],
-            traj: this.app_data.traj_jobs.length>0 ? this.app_data.traj_jobs[0]:"",
-            selected:false
+            traj:
+              this.app_data.traj_jobs.length > 0
+                ? this.app_data.traj_jobs[0]
+                : "",
+            selected: false,
           },
         };
         // console.log(new_case);
@@ -539,6 +547,7 @@ export default {
             text: "Research case edited!",
             color: "info",
           };
+          this.$emit('data_edited')
         }
       }
       this.app_data.ui_control.new_case.show = false;

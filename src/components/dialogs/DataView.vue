@@ -66,7 +66,7 @@ import { mapState, mapMutations } from "vuex";
 export default {
   name: "data_view",
   components: {
-    SiteSummary: () => import("@/components/SiteSummary.vue"),
+    SiteSummary: () => import("@/components/widgets/SiteSummary.vue"),
   },
   data: () => ({
     data_view_type: "Overview",
@@ -121,58 +121,6 @@ export default {
           var traj_job = this.app_data.traj_data.filter(
             (x) => x.job_name == this.select_traj_jobs
           )[0];
-
-          //   this.$worker
-          //     .run(
-          //       (traj_job,select_alt) => {
-
-          //         var header = [
-          //           {
-          //             text: "timestamp",
-          //             value: "timestamp",
-          //           },
-          //           {
-          //             text: "site_name",
-          //             value: "site_name",
-          //           },
-          //           {
-          //             text: "traj_date",
-          //             value: "traj_date",
-          //           },
-          //         ];
-          //         var time_header = [];
-          //         for (var i = 0; i < traj_job.data[0].lat.length; i++) {
-          //           time_header.push("-" + i + "H");
-          //           header.push({
-          //             text: "-" + i + "H",
-          //             value: "-" + i + "H",
-          //           });
-          //         }
-          //         var view_data = traj_job.data.map((x) => {
-          //           var temp = {};
-          //           if (select_alt == "Latitude") {
-          //             time_header.forEach((key, i) => (temp[key] = x.lat[i]));
-          //           } else if (select_alt == "Longitude") {
-          //             time_header.forEach((key, i) => (temp[key] = x.lon[i]));
-          //           } else {
-          //             time_header.forEach((key, i) => (temp[key] = x.alt[i]));
-          //           }
-          //           var temp2 = {
-          //             timestamp: x.timestamp,
-          //             site_name: x.site_name,
-          //             traj_date: x.traj_date,
-          //           };
-          //           return Object.assign(temp, temp2);
-          //         });
-          //         return { header: header, view_data: view_data };
-          //       },
-          //       [traj_job, this.select_alt]
-          //     )
-          //     .then((res) => {
-          //       this.view_header = res.header;
-          //       this.view_data = res.view_data;
-          //       this.isloading = false;
-          //     });
 
           var header = [
             {

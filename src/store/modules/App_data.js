@@ -245,10 +245,11 @@ const actions = {
 const mutations = {
     // open previous section, set all the parameters
     OPENSECTION: (state, res) => {
-        // console.log(res)
         for (var i in res) {
             state[i] = res[i]
         }
+
+        // re-initilze new variables
 
     },
     // generate site summary
