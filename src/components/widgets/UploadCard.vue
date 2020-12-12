@@ -7,6 +7,7 @@
       <v-file-input
         @change="onFileChanged"
         accept=".csv"
+        multiple
         :label="upload_card.label"
         prepend-icon="mdi-paperclip"
       ></v-file-input>
@@ -54,7 +55,7 @@ export default {
     upload_data() {
       this.isloading = true;
       csv_data
-        .read_csv(
+        .read_csv_multiple(
           this.file,
           this.app_data.missing_data,
           this.upload_card.isExpand

@@ -5,13 +5,22 @@ export default class Mapping {
         this.div = div_name
         this.layout = {
             dragmode: "zoom",
-            margin: { r: 0, t: 0, b: 0, l: 0 },
+            margin: {
+                r: 0,
+                t: 0,
+                b: 0,
+                l: 0
+            },
             width: 800,
             height: 600,
-            font: { size: 14 },
+            font: {
+                size: 14
+            },
             showlegend: true,
             legend: {
-                font: { size: 12 },
+                font: {
+                    size: 12
+                },
                 xanchor: "auto",
                 yanchor: "auto",
                 x: 1,
@@ -46,7 +55,7 @@ export default class Mapping {
     set_config(config) {
         Object.assign(this.config, config)
     }
-    
+
     // update mapbox config and redraw
     update_map(map_config) {
         this.layout.mapbox = Object.assign(this.layout.mapbox, map_config)
@@ -66,7 +75,9 @@ export default class Mapping {
 
     // init map
     plot_map(map_config) {
-        this.set_layout({ mapbox: map_config })
+        this.set_layout({
+            mapbox: map_config
+        })
         Plotly.newPlot(this.div, [{
             type: "scattermapbox",
         }], this.layout, this.config);
@@ -74,44 +85,56 @@ export default class Mapping {
 
     // plot dots with text (location = show_text)
     plot_dot(lat, lon, text, show_text = null) {
-        var data = [
-            {
-                type: "scattermapbox",
-                text: text,
-                lon: lon,
-                lat: lat,
-                marker: { color: "rgb(0, 150, 100)", size: 12, opacity: 0.5 }
+        var data = [{
+            type: "scattermapbox",
+            text: text,
+            lon: lon,
+            lat: lat,
+            hovertemplate: '%{text}<br>' +
+                '%{lat:.2f}, %{lon:.2f}' +
+                '<extra></extra>',
+            hoverlabel: {
+                bgcolor: "rgba(70,70,70,1)"
+            },
+            marker: {
+                color: "rgb(0, 150, 100)",
+                size: 12,
+                opacity: 0.5
             }
-        ];
+        }];
 
-        if (show_text!=null) {
-            data = data.map(x => { 
-                x.mode = 'markers+text', 
-                x.textposition = show_text; 
-                return x })
+        if (show_text != null) {
+            data = data.map(x => {
+                x.mode = 'markers+text',
+                    x.textposition = show_text;
+                return x
+            })
         }
 
         var map_config = {
             zoom: 4,
-            center: { lat: cal_mean(lat), lon: cal_mean(lon) }
+            center: {
+                lat: cal_mean(lat),
+                lon: cal_mean(lon)
+            }
         }
         this.add_trace(data)
         this.update_map(map_config)
-        this.update_layout({ showlegend: false })
+        this.update_layout({
+            showlegend: false
+        })
     }
 
 
     plot_heat_map(data) {
-        data = [
-            {
-                type: "densitymapbox",
-                lon: data.lon,
-                lat: data.lat,
-                z: data.z,
-                radius: 25,
-                coloraxis: 'coloraxis'
-            },
-        ];
+        data = [{
+            type: "densitymapbox",
+            lon: data.lon,
+            lat: data.lat,
+            z: data.z,
+            radius: 25,
+            coloraxis: 'coloraxis'
+        }, ];
         this.add_trace(data)
     }
 
@@ -132,8 +155,12 @@ export default class Mapping {
         var lat, lon
         var total = 0
         for (var i = 0; i < data.length; i++) {
-            lat = data[i].lat.map(x => { return Math.ceil(x) })
-            lon = data[i].lon.map(x => { return Math.ceil(x) })
+            lat = data[i].lat.map(x => {
+                return Math.ceil(x)
+            })
+            lon = data[i].lon.map(x => {
+                return Math.ceil(x)
+            })
             for (var j = 0; j < lat.length; j++) {
                 if (i < c) {
                     grid_lat[lat[j]][lon[j]].up += 1
@@ -167,7 +194,12 @@ export default class Mapping {
         //     { n: 1.5, w: 0.9 },
         //   ],
         total = total / z.length
-        weight = weight.map(x => { return { n: x.n * total, w: x.w } })
+        weight = weight.map(x => {
+            return {
+                n: x.n * total,
+                w: x.w
+            }
+        })
         console.log(weight)
         console.log(count)
         for (var k = 0; k < count.length; k++) {
@@ -178,7 +210,11 @@ export default class Mapping {
                 }
             }
         }
-        return { lat: lat, lon: lon, z: z }
+        return {
+            lat: lat,
+            lon: lon,
+            z: z
+        }
     }
 
     gene_grid(size) {
@@ -190,7 +226,8 @@ export default class Mapping {
             var temp = {}
             for (var j = 0; j < 360 / size; j++) {
                 temp[-180 + (j + 1) * size] = {
-                    up: null, bottom: null
+                    up: null,
+                    bottom: null
                 }
             }
             grid_lat[-90 + (i + 1) * size] = temp
@@ -201,10 +238,10 @@ export default class Mapping {
     save_image(file_name = "map") {
         Plotly.toImage(
             this.div, {
-            format: 'png',
-            height: 800,
-            width: 1200,
-        }).then(
+                format: 'png',
+                height: 800,
+                width: 1200,
+            }).then(
             function (url) {
                 var pom = document.createElement("a");
                 pom.href = url;

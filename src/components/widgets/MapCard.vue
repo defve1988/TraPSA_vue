@@ -3,7 +3,7 @@
     <v-card-text class="map_card_full_screen pa-0 ma-0">
       <v-toolbar class="elevation-0">
         <v-toolbar-title class="font-weight-light pr-3">
-          Mapping Tools
+          {{map_title}}
         </v-toolbar-title>
         <v-spacer></v-spacer>
 
@@ -48,7 +48,7 @@
         </v-tooltip>
       </v-toolbar>
 
-      <div ref="map_card" id="map_div_source"></div>
+      <div :ref="map_div_id" :id="map_div_id"></div>
     </v-card-text>
   </v-card>
 </template>
@@ -59,7 +59,13 @@ import Mapping from "@/assets/js/mapping";
 export default {
   name: "mapping_widget",
   components: {},
-  props: ["button_not_uesd", "card_height", "map_card_type"],
+  props: [
+    "map_div_id",
+    "map_title",
+    "button_not_uesd",
+    "card_height",
+    "map_card_type",
+  ],
   data: () => ({
     map_type: ["Simple Map", "Dark Theme", "Land Map", "Satellite Map"],
     full_screen_map: false,
@@ -159,16 +165,16 @@ export default {
         center: { lat: 45, lon: -90 },
         zoom: 1,
       };
-      this.mapping = new Mapping("map_div_source");
+      this.mapping = new Mapping(this.map_div_id);
       this.mapping.set_layout({
-        width: this.$refs.map_card.clientWidth,
+        width: this.$refs[this.map_div_id].clientWidth,
         height: this.card_height - 40,
       });
       this.mapping.plot_map(this.map_config);
     },
     resize_map() {
       this.mapping.update_layout({
-        width: this.$refs.map_card.clientWidth,
+        width: this.$refs[this.map_div_id].clientWidth,
       });
     },
     tool_buttons_func(func_text) {
@@ -215,6 +221,7 @@ export default {
       var lat = this.app_data.sites.data.map((x) => x.lat);
       var lon = this.app_data.sites.data.map((x) => x.lon);
       var site_name = this.app_data.sites.data.map((x) => x.site_name);
+      // console.log(this.app_data.sites.data)
       this.mapping.plot_dot(lat, lon, site_name, "right");
     },
     show_map() {
@@ -298,7 +305,7 @@ export default {
           )
           .then((res) => {
             // data: lon, lat, conc, alt
-            console.log(res)
+            console.log(res);
             if (res.error == 1) {
               console.log("display warning");
             } else {

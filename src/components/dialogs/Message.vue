@@ -1,12 +1,22 @@
 <template>
-  <v-snackbar v-model="app_data.ui_control.snackbar.show" top multi-line class="ma-1">
+  <v-snackbar
+    v-model="app_data.ui_control.snackbar.show"
+    bottom
+    multi-line
+    class="ma-1"
+  >
     {{ app_data.ui_control.snackbar.text }}
-    <v-btn :color="app_data.ui_control.snackbar.color" text @click="app_data.ui_control.snackbar.show = false">Close</v-btn>
+    <v-btn
+      :color="app_data.ui_control.snackbar.color"
+      text
+      @click="app_data.ui_control.snackbar.show = false"
+      >Close</v-btn
+    >
   </v-snackbar>
 </template>
 
 <script>
-// message snackbar: show different types of messages by changing the "snackbar" stored in app_data.ui_control 
+// message snackbar: show different types of messages by changing the "snackbar" stored in app_data.ui_control
 // eg:
 // snackbar = {
 //             show: true,
@@ -24,3 +34,5 @@ export default {
   },
 };
 </script>
+<style scoped>
+</style>

@@ -31,7 +31,7 @@
             </v-tooltip>
 
             <v-spacer></v-spacer>
-            <v-btn dark @click="test">Test</v-btn>
+            <!-- <v-btn dark @click="test">Test</v-btn> -->
             <v-btn color="primary lighten-2" class="ml-5" @click="open_section">
               <v-icon left>mdi-folder-open</v-icon>Open Section
             </v-btn>
@@ -106,8 +106,8 @@
     <!-- app footer -->
     <v-footer height="30">
       <span class="primary--text caption"
-        >Trajectory-based Potential Sourece Apportionment Project (2020) by
-        Chuanlong Zhou.</span
+        >Chuanlong Zhou &copy; 2020, Center for Air and Aquatic Resources
+        Engineering and Sciences (CAARES)</span
       >
     </v-footer>
 
@@ -118,8 +118,6 @@
     <v-dialog v-model="app_data.ui_control.data_view" width="1000">
       <DataView />
     </v-dialog>
-
-
   </v-app>
 </template>
 
@@ -203,14 +201,15 @@ export default {
           text: "Your previous section is loaded!",
           color: "info",
         };
-        this.app_data.ui_control.isLoading = false;});
+        this.app_data.ui_control.isLoading = false;
+      });
     },
   },
 };
 </script>
 
 <style>
-.span{
+.span {
   display: inline-block;
   vertical-align: bottom;
 }

@@ -42,9 +42,7 @@
                   <v-col cols="4" class="pa-1">
                     <v-row>
                       <v-col cols="12" class="ml-3">
-                        <upload_card
-                          :upload_card="upload_site"
-                        />
+                        <upload_card :upload_card="upload_site" />
                       </v-col>
                     </v-row>
                     <v-row>
@@ -62,11 +60,11 @@
                   </v-col>
                   <v-col cols="8" class="px-5 pt-1">
                     <v-container>
-                      <map_card
-                        :button_not_uesd="button_not_uesd"
-                        :card_height="475"
-                        :map_card_type="'site_preview'"
-                      />
+                      <map_card 
+                      map_div_id="site_map"
+                      map_title="Site Map"
+                      :button_not_uesd="button_not_uesd" :card_height="475"
+                      :map_card_type="'site_preview'" />
                     </v-container>
                   </v-col>
                 </v-row>

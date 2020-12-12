@@ -8,7 +8,12 @@
 
         <v-col cols="9" class="mt-2 px-5">
           <v-row dense>
-            <map_card :button_not_uesd="button_not_uesd" :card_height="700"/>
+            <map_card
+              map_div_id="source_map"
+              map_title="Potential Source"
+              :button_not_uesd="button_not_uesd"
+              :card_height="700"
+            />
           </v-row>
         </v-col>
       </v-row>
