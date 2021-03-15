@@ -8,10 +8,17 @@
           height="100%"
           :loading="app_data.ui_control.isLoading"
         >
-          <v-card-title class="justify-left py-5 px-10">
-            <v-icon color="rgba(53, 104, 89, 0.5)" class="mr-n5" size="50"
-              >mdi-grid</v-icon
-            >
+          <v-card-title class="justify-left py-2 px-0 pr-5">
+            <v-img
+              class="img_logo"
+              src="logo.png"
+              height="100"
+              width="100"
+              contain
+            ></v-img>
+            <!-- text logo below -->
+            <!-- <v-icon color="rgba(53, 104, 89, 0.5)" class="mr-n5" size="50">mdi-grid
+              </v-icon>
             <v-icon color="primary" size="30" class="ml-n5"
               >mdi-rhombus-medium</v-icon
             >
@@ -28,19 +35,27 @@
               <span
                 >Trajectory-based Potential Sourece Apportionment Project</span
               >
-            </v-tooltip>
+            </v-tooltip> -->
 
             <v-spacer></v-spacer>
             <!-- <v-btn dark @click="test">Test</v-btn> -->
-            <v-btn color="primary lighten-2" class="ml-5" @click="open_section">
+            <v-btn
+              color="primary lighten-2"
+              class="ml-5 mt-10"
+              @click="open_section"
+            >
               <v-icon left>mdi-folder-open</v-icon>Open Section
             </v-btn>
-            <v-btn color="primary lighten-2" class="ml-5" @click="save_section">
+            <v-btn
+              color="primary lighten-2"
+              class="ml-5 mt-10"
+              @click="save_section"
+            >
               <v-icon left>mdi-download</v-icon>Save Section
             </v-btn>
             <v-btn
               color="primary lighten-2"
-              class="ml-5"
+              class="ml-5 mt-10"
               @click="app_data.ui_control.data_view = true"
             >
               <v-icon left>mdi-table-multiple</v-icon>Data Summary
@@ -106,9 +121,11 @@
     <!-- app footer -->
     <v-footer height="30">
       <span class="primary--text caption"
-        >Chuanlong Zhou &copy; 2020, Center for Air and Aquatic Resources
-        Engineering and Sciences (CAARES)</span
-      >
+        >Chuanlong Zhou &copy; 2020-2021, Center for Air and Aquatic Resources
+        Engineering and Sciences (<a href="https://www.clarkson.edu/caares"
+          >CAARES</a
+        >)
+      </span>
     </v-footer>
 
     <!-- dialogs -->
@@ -216,5 +233,8 @@ export default {
 .my_dataviz {
   height: 100%;
   width: 100%;
+}
+.img_logo{
+  filter: drop-shadow(0 0 0.2rem rgba(102, 102, 102, 0.5))
 }
 </style>

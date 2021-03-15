@@ -80,6 +80,7 @@ async function read_csv_multiple(file, missing, isExpand) {
     for (var i = 0; i < file.length; i++) {
         console.log(file[i])
         let content = await readFileAsync(file[i]);
+
         let temp = convert_csv(content, missing, isExpand);
         temp.header.forEach(x => {
             if (!header_text.includes(x.text)) {
@@ -87,7 +88,7 @@ async function read_csv_multiple(file, missing, isExpand) {
                 res.header.push(x)
             }
         })
-        console.log(temp.header, res.header, header_text);
+        console.log(temp.header, res.header, temp.data);
 
         res.data = res.data.concat(temp.data)
     }
@@ -133,7 +134,7 @@ function convert_csv(data, missing, isExpand) {
 
     for (let l = 1; l < lines.length; l++) {
         let content = lines[l].split(",").filter((x) => {
-            return x.length > 0
+            return x.trim().length > 0
         })
         if (content.length == header.length) {
             let line = {}
@@ -151,10 +152,10 @@ function convert_csv(data, missing, isExpand) {
                 }
                 line[header[h]] = (missing.includes(String(content[h]).trim())) ? null : content[h].trim()
             }
-
             output.push(line)
         }
     }
+
     return {
         header: vue_header,
         data: output

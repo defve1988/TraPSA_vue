@@ -62,6 +62,7 @@ export default {
         )
         .then((result) => {
           // console.log(this.upload_card.update_data);
+          console.log(result)
           this.UPDATE_DATA({
             data: result,
             name: this.upload_card.update_data,

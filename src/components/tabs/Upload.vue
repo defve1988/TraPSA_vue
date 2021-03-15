@@ -141,7 +141,7 @@
                 <v-row justify="center">
                   <v-col cols="4" class="pa-1">
                     <v-row>
-                      <v-col cols="12" class="ml-3">
+                    <v-col cols="12" class="ml-3">
                         <upload_card :upload_card="upload_wind" />
                       </v-col>
                     </v-row>
