@@ -158,9 +158,6 @@ export default {
           x.conc = conc_index[x.time_stamp];
           return x;
         });
-      // console.log(conc_index)
-      // console.log(temp)
-
         temp = temp.filter((x) => x.conc != null);
         data = data.concat(temp);
       }
@@ -184,8 +181,6 @@ export default {
           grid_res = await dv2.cal_SQTBA(res);
           break;
       }
-      // console.log(res)
-      // console.log(grid_res)
       p = await this.plot_data["source_map"].plot_obj.plot_heat_map(
         grid_res,
         dot_size,

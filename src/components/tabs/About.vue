@@ -81,9 +81,21 @@
             </v-system-bar>
             <v-container class="pa-3 pt-0 pb-0">
               <v-row justify="center">
-                <video :width="video_width" height="430" controls>
+                <!-- <video :width="video_width" height="430" controls>
                   <source src="data/turtorial.mp4" type="video/mp4" />
                 </video>
+                src="https://vimeo.com/manage/videos/542644809" -->
+
+                <!-- <iframe :width="video_width" height="430" src="https://player.vimeo.com/542644809" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> -->
+
+                <iframe src="https://player.vimeo.com/video/542644809?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" 
+                frameborder="0" 
+                allow="autoplay; fullscreen; picture-in-picture" 
+                allowfullscreen 
+                 title="TraPSA_tutorial" 
+                 :width="video_width" height="430"></iframe>
+                <!-- <script src="https://player.vimeo.com/api/player.js"> -->
+
               </v-row>
             </v-container>
           </v-card>
@@ -105,11 +117,11 @@
               <p class="my-0">Example dataset with saved TraPSA sections.</p>
               <ul>
                 <li>
-                  <a href="\data\example_data.rar">Example Dataset</a>
+                  <a href="example_data.rar">Example Dataset</a>
                   What data files are needed?
                 </li>
                 <li>
-                  <a href="\data\example_hysplit.bat">Example HYSPLIT</a>
+                  <a href="example_hysplit.bat">Example HYSPLIT</a>
                   What 
                   <i>
                     <abbr title=
@@ -123,11 +135,11 @@ with a certain format for further analysis."
                   file will be genereated for HYSPLIT?
                 </li>
                 <li>
-                  <a href="\data\example_trajectory.csv">Example Endpoints</a>
+                  <a href="example_trajectory.csv">Example Endpoints</a>
                   What trajectory endpoint file will be generated?
                 </li>
                 <li>
-                  <a href="\data\example.trapsa">Example TraPSA section</a>
+                  <a href="example.trapsa" download>Example TraPSA section</a>
                   How can you resume your prvious sections? Upload with
                   <i>Open Section</i> button.
                 </li>
@@ -161,7 +173,7 @@ with a certain format for further analysis."
                 </li>
                 <li>
                   <a
-                    href="\data\paper\Review of receptor modeling methods for source.pdf"
+                    href="Review of receptor modeling methods for source.pdf"
                     target="_blank"
                     >Receptor Modeling Paper</a
                   >
@@ -175,14 +187,14 @@ with a certain format for further analysis."
                 </li>
                 <li>
                   <a
-                    href="\data\paper\Atmospheric Mercury Temporal Trends.pdf"
+                    href="Atmospheric Mercury Temporal Trends.pdf"
                     target="_blank"
                     >TraPSA Application Paper (Mercury)</a
                   >
                 </li>
                 <li>
                   <a
-                    href="\data\paper\Ambient Ammonia Concentrations Across New York.pdf"
+                    href="Ambient Ammonia Concentrations Across New York.pdf"
                     target="_blank"
                     >TraPSA Application Paper (Ammonia)</a
                   >
@@ -215,7 +227,7 @@ with a certain format for further analysis."
             </v-system-bar>
             <v-card-text class="subtitle-1">
               <p>
-                We provide a <a href="data/HYSPLIT_demo.rar">demo</a> HYSPLIT 4
+                We provide a <a href="HYSPLIT_demo.rar">demo</a> HYSPLIT 4
                 package, which can help you quickly run the example dataset. 
                 However, we strongly recommend that
                 users register and install the most updated version of HYSPLIT

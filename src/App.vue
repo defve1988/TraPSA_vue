@@ -140,7 +140,7 @@ export default {
       { name: "Upload Data", icon: "mdi-arrow-up-bold-circle", index: 1 },
       { name: "Trajectory", icon: "mdi-earth", index: 2 },
       { name: "Basic Analysis", icon: "mdi-chart-bar", index: 3 },
-      { name: "Potential Soure", icon: "mdi-hexagon-multiple", index: 4 },
+      { name: "Potential Sources", icon: "mdi-hexagon-multiple", index: 4 },
     ],
   }),
   methods: {

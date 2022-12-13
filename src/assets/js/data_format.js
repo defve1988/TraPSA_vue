@@ -47,6 +47,11 @@
 // }
 
 
+
+
+
+export default { read_csv, readFileAsync }
+
 function readFileAsync(file) {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
@@ -71,53 +76,15 @@ async function read_csv(file, missing, isExpand) {
 
 }
 
-async function read_csv_multiple(file, missing, isExpand) {
-    var res = {
-        header: [],
-        data: []
-    }
-    var header_text = []
-    for (var i = 0; i < file.length; i++) {
-        console.log(file[i])
-        let content = await readFileAsync(file[i]);
-
-        let temp = convert_csv(content, missing, isExpand);
-        temp.header.forEach(x => {
-            if (!header_text.includes(x.text)) {
-                header_text.push(x.tex)
-                res.header.push(x)
-            }
-        })
-        console.log(temp.header, res.header, temp.data);
-
-        res.data = res.data.concat(temp.data)
-    }
-    return {
-        header: res.header,
-        data: res.data,
-    }
-
-}
-
-
 function convert_csv(data, missing, isExpand) {
-    missing = missing.split(",").map(x => x.trim())
     let lines = data.split("\n")
     let output = []
-    let header = lines[0].trim().split(",").filter((x) => {
-        return x.length > 0
-    })
+    let header = lines[0].trim().split(",").filter((x) => { return x.length > 0 })
     let vue_header = []
     for (const h in header) {
-        vue_header.push({
-            text: header[h] + "_imported",
-            value: header[h]
-        })
+        vue_header.push({ text: header[h] + "_imported", value: header[h] })
         if (header[h].toLowerCase().trim() == "timestamp" && isExpand) {
-            vue_header.push({
-                text: "TimeString_converted",
-                value: "TimeString"
-            })
+            vue_header.push({ text: "TimeString_converted", value: "TimeString" })
         }
     }
 
@@ -133,9 +100,7 @@ function convert_csv(data, missing, isExpand) {
     // let weekdays = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fir.', 'Sat.']
 
     for (let l = 1; l < lines.length; l++) {
-        let content = lines[l].split(",").filter((x) => {
-            return x.trim().length > 0
-        })
+        let content = lines[l].split(",").filter((x) => { return x.length > 0 })
         if (content.length == header.length) {
             let line = {}
             for (const h in header) {
@@ -150,22 +115,11 @@ function convert_csv(data, missing, isExpand) {
                     // line["date_value"] = date
                     line["TimeString"] = date.toLocaleString().replace(",", " ")
                 }
-                line[header[h]] = (missing.includes(String(content[h]).trim())) ? null : content[h].trim()
+                line[header[h]] = (String(content[h]).trim() == String(missing).trim()) ? null : content[h].trim()
             }
+
             output.push(line)
         }
     }
-
-    return {
-        header: vue_header,
-        data: output
-    }
-}
-
-
-
-export default {
-    read_csv,
-    readFileAsync,
-    read_csv_multiple
+    return { header: vue_header, data: output }
 }

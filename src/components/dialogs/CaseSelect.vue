@@ -445,11 +445,11 @@ export default {
       var selected_month = this.cal_case_selected_month();
       var selected_hour = this.cal_case_selected_hour();
 
-      console.log(selected_site);
-      console.log(selected_chemical);
-      console.log(selected_year);
-      console.log(selected_month);
-      console.log(selected_hour);
+      // console.log(selected_site);
+      // console.log(selected_chemical);
+      // console.log(selected_year);
+      // console.log(selected_month);
+      // console.log(selected_hour);
 
       var wind = this.app_data.conc_df.df.reduce(function (prev, curr) {
         var curr_date = new Date(curr.time_stamp);
