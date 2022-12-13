@@ -1,0 +1,28 @@
+{
+    "layout": {
+        "name": "layout",
+        "attr": "layout",
+        "props": [
+            "title",
+            "fig_margin"
+        ]
+    },
+    "Histogram": {
+        "name": "Histogram",
+        "attr": "histogram",
+        "props": [
+            "histnorm",
+            "marker",
+            "line"
+        ]
+    },
+    "Scatter Plot": {
+        "name": "Scatter Plot",
+        "attr": "scatter_plot",
+        "props": [
+            "scatter_mode",
+            "marker",
+            "line"
+        ]
+    }
+}

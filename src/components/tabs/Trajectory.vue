@@ -3,46 +3,55 @@
     <v-container class="px-10">
       <v-stepper v-model="e1" class="mt-5" vertical>
         <!-- introduction/working folder -->
-        <v-stepper-step :rules="isStep1" color="primary lighten-2" :complete="e1 > 1" step="1">
+        <v-stepper-step
+          :rules="isStep1"
+          color="primary lighten-2"
+          :complete="e1 > 1"
+          step="1"
+        >
           HYSPLIT Model
-          <small v-if="!isStep1[0]()">Please enter HYSPLIT installization path.</small>
+          <small v-if="!isStep1[0]()"
+            >Please enter HYSPLIT installization path.</small
+          >
         </v-stepper-step>
         <v-stepper-content step="1">
           <v-card class="stepper_card" flat>
             <v-card-text>
               <p class="subtitle-1">
-                NOAA HYSPLIT4 model (windows-based version) will be used for trajectory endpoints generation. More infromation can be found
-                <a
-                  href="https://www.ready.noaa.gov/HYSPLIT.php"
-                  target="_blank"
-                >here</a>.
+                NOAA HYSPLIT4 model (windows-based version) will be used for
+                trajectory endpoints generation. More infromation can be found
+                <a href="https://www.ready.noaa.gov/HYSPLIT.php" target="_blank"
+                  >here</a
+                >.
               </p>
               <ul class="subtitle-1">
                 <li>
-                  If you haven't installed HYSPLIT model, please register and download full HYSPLIT version
+                  If you haven't installed HYSPLIT model, please register and
+                  download full HYSPLIT version
                   <a
                     href="https://www.ready.noaa.gov/HYSPLIT_register.php"
                     target="_blank"
-                  >here</a>.
+                    >here</a
+                  >.
                 </li>
                 <li>
-                  If you haven't installed HYSPLIT model, you can try TraPSA with HYSPLIT
-                  <a
-                    href="\data\HYSPLIT_demo.rar"
-                  >demo</a>.
+                  If you haven't installed HYSPLIT model, you can try TraPSA
+                  with HYSPLIT
+                  <a href="\data\HYSPLIT_demo.rar">demo</a>.
                 </li>
               </ul>
             </v-card-text>
 
             <v-card-text>
-              <p
-                class="subtitle-1"
-              >After HYSPLIT has been installed, copy HYSPLIT installization path:</p>
+              <p class="subtitle-1">
+                After HYSPLIT has been installed, copy HYSPLIT installization
+                path:
+              </p>
               <v-col cols="12" lg="8" md="12" class="my-n5">
                 <v-text-field
                   label="For example: C:\HYSPLIT"
                   prepend-inner-icon="mdi-folder"
-                  v-model="app_data.hysplit.working"
+                  v-model="ui_control.hysplit.working"
                 ></v-text-field>
               </v-col>
             </v-card-text>
@@ -51,35 +60,53 @@
         </v-stepper-content>
 
         <!-- Trajectory Date -->
-        <v-stepper-step :rules="isStep2" color="primary lighten-2" :complete="e1 > 2" step="2">
-          Starting Timestamps
-          <small v-if="!isStep2[0]()">Please correct expansion parameters.</small>
+        <v-stepper-step
+          :rules="isStep2"
+          color="primary lighten-2"
+          :complete="e1 > 2"
+          step="2"
+        >
+          Upsampling
+          <small v-if="!isStep2[0]()"
+            >Please correct expansion parameters.</small
+          >
           <small v-else>Optional</small>
         </v-stepper-step>
         <v-stepper-content step="2">
           <v-card class="stepper_card" flat>
             <v-card-text>
-              <p
-                class="subtitle-1"
-              >Trajectory timestamps can be expanded for the dataset with long sampling periods. For example:</p>
-              <ul class="subtitle-1" style="list-style: none;">
+              <p class="subtitle-1">
+                Trajectory can be upsampled if the dataset has relatively long
+                sampling periods.<br />
+                For example:
+              </p>
+              <ul class="subtitle-1" style="list-style: none">
                 <li>
-                  - Measurement was sampled for
-                  <b>24 hours</b> and data was collected at
+                  - Measurement was sampled every
+                  <b>24 hours</b> and one data point was collected at
                   <b>2020/1/2 00:00</b>
                 </li>
                 <li>
-                  - You can expand to
+                  - You can upsample to
                   <b>4 timestamps</b> to cover the whole sampling period
                 </li>
-                <li>- The strating timestamp for generating back-trajectory in this case will be:
-                  <b>2020/1/1 06:00, 2020/1/1 12:00, 2020/1/1 18:00, 2020/1/2 00:00</b>
+                <li>
+                  - The strating timestamp for generating back-trajectory in
+                  this case will be:
+                  <b
+                    >2020/1/1 06:00, 2020/1/1 12:00, 2020/1/1 18:00, 2020/1/2
+                    00:00</b
+                  >
                 </li>
               </ul>
             </v-card-text>
             <v-switch
-              v-model="app_data.hysplit.start_time.isExpand"
-              :label="(!app_data.hysplit.start_time.isExpand)?'Enable Timestamp Expansion':'Disable Timestamp Expansion'"
+              v-model="ui_control.hysplit.start_time.isExpand"
+              :label="
+                !ui_control.hysplit.start_time.isExpand
+                  ? 'Enable Upsampling'
+                  : 'Disable Upsampling'
+              "
               class="mx-5 my-0 py-0"
             ></v-switch>
             <v-row>
@@ -87,18 +114,18 @@
                 <v-text-field
                   label="Data sampling period (hour)"
                   hint="For the example above: 24"
-                  v-model="app_data.hysplit.start_time.sample_period"
+                  v-model="ui_control.hysplit.start_time.sample_period"
                   class="mx-5"
-                  :disabled="!app_data.hysplit.start_time.isExpand"
+                  :disabled="!ui_control.hysplit.start_time.isExpand"
                 ></v-text-field>
               </v-col>
               <v-col cols="4" class="my-n5">
                 <v-text-field
-                  label="Expanded timestamp number"
+                  label="Upsample number"
                   hint="For the example above: 4"
-                  v-model="app_data.hysplit.start_time.expand_number"
+                  v-model="ui_control.hysplit.start_time.expand_number"
                   class="mx-5"
-                  :disabled="!app_data.hysplit.start_time.isExpand"
+                  :disabled="!ui_control.hysplit.start_time.isExpand"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -107,21 +134,39 @@
           <v-btn text @click="e1 = 1">Previous</v-btn>
         </v-stepper-content>
         <!-- trejectory parameter -->
-        <v-stepper-step :rules="isStep3" color="primary lighten-2" :complete="e1 > 3" step="3">
+        <v-stepper-step
+          :rules="isStep3"
+          color="primary lighten-2"
+          :complete="e1 > 3"
+          step="3"
+        >
           Trejectory Parameters
-          <small v-if="!isStep3[0]()">Please correct trejectory parameters.</small>
+          <small v-if="!isStep3[0]()"
+            >Please correct trejectory parameters.</small
+          >
         </v-stepper-step>
         <v-stepper-content step="3">
           <v-card class="stepper_card pt-2" flat>
             <v-row dense class="mx-0">
-              <v-col cols="12" lg="5" md="12">
+              <v-col cols="6" lg="5" md="12">
                 <v-select
-                  v-model="app_data.hysplit.sites"
-                  :items="app_data.sites.data.map((x)=>{return x.site_name})"
+                  v-model="ui_control.hysplit.sites"
+                  :items="
+                    app_data.sites.df.map((x) => {
+                      return x.site_name;
+                    })
+                  "
                   label="Select strating sites"
                   chips
                   multiple
                 ></v-select>
+              </v-col>
+              <v-col cols="12" lg="5" md="12" class="px-10">
+                <v-text-field
+                  label="Name the trajectory task"
+                  v-model="ui_control.hysplit.job_name"
+                  hint="This name will be displayed in future analysis."
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row dense class="mx-0">
@@ -129,25 +174,26 @@
                 <v-text-field
                   label="Back-trajectory time (hour)"
                   hint="Example for back-trajectory 24 hours: -24"
-                  v-model="app_data.hysplit.trajectory_time"
-                  :rules="[value => !!parseInt(value) || 'Integer number required.']"
+                  v-model="ui_control.hysplit.trajectory_time"
+                  :rules="[
+                    (value) => !!parseInt(value) || 'Integer number required.',
+                  ]"
                 ></v-text-field>
               </v-col>
             </v-row>
             <v-row dense class="mx-0">
               <v-col cols="12" lg="5" md="12">
                 <v-select
-                  v-model="app_data.hysplit.start_height.value_type"
-                  :items="app_data.hysplit.height_type"
-                  :rules="[v => !!v || 'Item is required']"
+                  v-model="ui_control.hysplit.start_height.value_type"
+                  :items="ui_control.hysplit.height_type"
+                  :rules="[(v) => !!v || 'Item is required']"
                   label="Starting point height unit"
                 ></v-select>
               </v-col>
               <v-col cols="12" lg="5" md="12" class="px-10">
                 <v-text-field
                   label="Starting point height value (m)"
-                  v-model="app_data.hysplit.start_height.value"
-                  :rules="[value => !!parseInt(value) || 'Integer number required.']"
+                  v-model="ui_control.hysplit.start_height.value"
                   hint="Example for fraction of mixed layer: 0.5"
                 ></v-text-field>
               </v-col>
@@ -157,7 +203,12 @@
           <v-btn text @click="e1 = 2">Previous</v-btn>
         </v-stepper-content>
         <!-- mete data -->
-        <v-stepper-step :rules="isStep4" color="primary lighten-2" :complete="e1 > 4" step="4">
+        <v-stepper-step
+          :rules="isStep4"
+          color="primary lighten-2"
+          :complete="e1 > 4"
+          step="4"
+        >
           Meteorological Data
           <small v-if="!isStep4[0]()">Please select mete data folder.</small>
         </v-stepper-step>
@@ -165,28 +216,37 @@
           <v-card class="stepper_card" flat>
             <v-card-text>
               <p class="subtitle-1">
-                Various gridded meteorological data format can be used for HYSPLIT model. More information can be found
+                Various gridded meteorological data format can be used for
+                HYSPLIT model. More information can be found
                 <a
                   href="https://www.ready.noaa.gov/archives.php"
                   target="_blank"
-                >here</a>.
+                  >here</a
+                >.
               </p>
               <p class="subtitle-1">
                 Before continuing analysis,
-                <v-btn small @click="show_mete_data">Download</v-btn>&nbsp;meteorological data, and
-                select corresponding meteorological data format:
+                <v-btn small @click="show_mete_data">Download</v-btn
+                >&nbsp;meteorological data, and select corresponding
+                meteorological data format:
               </p>
-              <v-radio-group v-model="app_data.hysplit.mete.type" row>
-                <v-radio v-for="n in app_data.hysplit.mete_types" :key="n" :label="n" :value="n"></v-radio>
+              <v-radio-group v-model="ui_control.hysplit.mete.type" row>
+                <v-radio
+                  v-for="n in ui_control.hysplit.mete_types"
+                  :key="n"
+                  :label="n"
+                  :value="n"
+                ></v-radio>
               </v-radio-group>
-              <p
-                class="subtitle-1"
-              >Please store all meteorological data in one folder and copy the path here:</p>
+              <p class="subtitle-1">
+                Please store all meteorological data in one folder and copy the
+                path here:
+              </p>
               <v-col cols="12" lg="8" md="12" class="my-n5 ml-n2">
                 <v-text-field
                   label="For example: D:\metedata"
                   prepend-inner-icon="mdi-folder"
-                  v-model="app_data.hysplit.mete.path"
+                  v-model="ui_control.hysplit.mete.path"
                 ></v-text-field>
               </v-col>
             </v-card-text>
@@ -195,19 +255,21 @@
           <v-btn text @click="e1 = 3">Previous</v-btn>
         </v-stepper-content>
         <!-- finish -->
-        <v-stepper-step color="primary lighten-2" :complete="e1 > 5" step="5">Generate Trajectory</v-stepper-step>
+        <v-stepper-step color="primary lighten-2" :complete="e1 > 5" step="5"
+          >Generate Trajectory</v-stepper-step
+        >
         <v-stepper-content step="5">
           <v-card class="stepper_card" flat>
             <v-card-text>
               <p class="subtitle-1">
-                HYSPLIT model need to be run on your local machine.
-                TraPSA will generate batch file that controls all the necessary processes:
+                HYSPLIT model need to be run on your local machine. TraPSA will
+                generate batch file that controls all the necessary processes:
               </p>
               <ol class="subtitle-1">
                 <li>
-                  <v-btn small @click="generate_bat">Download</v-btn>&nbsp; and copy
-                  <b>run_HYSPLIT.bat</b> to
-                  <b>{{app_data.hysplit.working}}</b> (HYSPLIT model path).
+                  <v-btn small @click="generate_bat">Download</v-btn>&nbsp; and
+                  copy <b>run_HYSPLIT.bat</b> to
+                  <b>{{ ui_control.hysplit.working }}</b> (HYSPLIT model path).
                 </li>
                 <li class="my-1">
                   Run
@@ -223,7 +285,8 @@
                     @change="onFileChanged"
                   />
                   &nbsp;the CSV file generated in
-                  <b>{{app_data.hysplit.working}}</b>, if the processes were succeeded.
+                  <b>{{ ui_control.hysplit.working }}</b
+                  >, if the processes were succeeded.
                 </li>
               </ol>
             </v-card-text>
@@ -238,7 +301,8 @@
 
 <script>
 import { mapState } from "vuex";
-import data_traj from "@/assets/js/data_traj";
+import dv2_df from "@/dv2/dv2_df";
+
 export default {
   name: "trajectory",
   components: {},
@@ -253,33 +317,35 @@ export default {
   computed: {
     ...mapState({
       app_data: "app_data",
+      ui_control: "ui_control",
+      plot_data: "plot_data",
     }),
   },
   mounted() {},
   methods: {
     next_1() {
-      console.log(this.app_data.hysplit.working);
+      console.log(this.ui_control.hysplit.working);
       this.isStep1 =
-        this.app_data.hysplit.working == null ? [() => false] : [() => true];
+        this.ui_control.hysplit.working == null ? [() => false] : [() => true];
       if (this.isStep1[0]()) {
         this.e1 = 2;
       }
     },
     next_2() {
-      console.log(this.app_data.hysplit.start_time);
+      console.log(this.ui_control.hysplit.start_time);
       this.isStep2 = [() => true];
-      if (this.app_data.hysplit.start_time.isExpand) {
-        this.app_data.hysplit.start_time.sample_period = parseInt(
-          this.app_data.hysplit.start_time.sample_period
+      if (this.ui_control.hysplit.start_time.isExpand) {
+        this.ui_control.hysplit.start_time.sample_period = parseInt(
+          this.ui_control.hysplit.start_time.sample_period
         );
-        this.app_data.hysplit.start_time.expand_number = parseInt(
-          this.app_data.hysplit.start_time.expand_number
+        this.ui_control.hysplit.start_time.expand_number = parseInt(
+          this.ui_control.hysplit.start_time.expand_number
         );
-        console.log(this.app_data.hysplit.start_time.sample_period);
-        console.log(this.app_data.hysplit.start_time.expand_number);
+        console.log(this.ui_control.hysplit.start_time.sample_period);
+        console.log(this.ui_control.hysplit.start_time.expand_number);
         if (
-          this.app_data.hysplit.start_time.sample_period &&
-          this.app_data.hysplit.start_time.expand_number
+          this.ui_control.hysplit.start_time.sample_period &&
+          this.ui_control.hysplit.start_time.expand_number
         ) {
           this.isStep2 = [() => true];
           this.e1 = 3;
@@ -291,20 +357,20 @@ export default {
       }
     },
     next_3() {
-      console.log(this.app_data.start_height);
-      console.log(this.app_data.trajectory_time);
-      console.log(this.app_data.hysplit.sites);
+      console.log(this.ui_control.hysplit.start_height);
+      console.log(this.ui_control.hysplit.trajectory_time);
+      console.log(this.ui_control.hysplit.sites);
 
-      this.app_data.hysplit.start_height.value = parseInt(
-        this.app_data.hysplit.start_height.value
+      this.ui_control.hysplit.start_height.value = parseFloat(
+        this.ui_control.hysplit.start_height.value
       );
-      this.app_data.hysplit.trajectory_time = parseInt(
-        this.app_data.hysplit.trajectory_time
+      this.ui_control.hysplit.trajectory_time = parseInt(
+        this.ui_control.hysplit.trajectory_time
       );
       if (
-        this.app_data.hysplit.start_height.value &&
-        this.app_data.hysplit.trajectory_time &&
-        this.app_data.hysplit.sites.length > 0
+        this.ui_control.hysplit.start_height.value &&
+        this.ui_control.hysplit.trajectory_time &&
+        this.ui_control.hysplit.sites.length > 0
       ) {
         this.isStep3 = [() => true];
         this.e1 = 4;
@@ -313,9 +379,9 @@ export default {
       }
     },
     next_4() {
-      console.log(this.app_data.hysplit.mete);
+      console.log(this.ui_control.hysplit.mete);
       this.isStep4 =
-        this.app_data.hysplit.mete.path == 0 ? [() => false] : [() => true];
+        this.ui_control.hysplit.mete.path == 0 ? [() => false] : [() => true];
       if (this.isStep4[0]()) {
         this.e1 = 5;
       }
@@ -329,9 +395,9 @@ export default {
         this.isStep3[0]() &&
         this.isStep4[0]()
       ) {
-        this.app_data.ui_control.curr_tab +=1;
+        this.ui_control.curr_tab += 1;
       } else {
-        this.app_data.ui_control.snackbar = {
+        this.ui_control.snackbar = {
           show: true,
           text: "Please fix the errors before continuing!",
           color: "error",
@@ -339,38 +405,25 @@ export default {
       }
     },
     show_mete_data() {
-      console.log(this.app_data.ui_control);
-      this.app_data.ui_control.mete_dialog = true;
+      // console.log(this.ui_control);
+      this.ui_control.mete_dialog = true;
     },
     async generate_bat() {
-      this.app_data.ui_control.isLoading = "primary";
-      // set all parameters
-      this.app_data.curr_job = data_traj.set_job_parameter(
-        this.app_data.hysplit
-      );
-      // get selected data
-      var selected = data_traj.get_selected_data(
-        this.app_data.measurement.data,
-        this.app_data.hysplit.sites
-      );
-      // console.log("selected",selected)
-      // generate timestamps
-      this.app_data.curr_job.start_point = data_traj.generate_timestamp(
-        selected,
-        this.app_data.hysplit.start_time
+      this.ui_control.isLoading = "primary";
+
+      // create traj task
+      var traj_res = await this.app_data.conc_df.traj_task.traj_setup(
+        this.ui_control.hysplit,
+        this.app_data.conc_df,
+        this.app_data.sites
       );
 
-      // console.log( this.app_data.curr_job.start_point)
-      // genereate bat file
-      var bat_content = await data_traj.generate_bat(
-        this.app_data.curr_job,
-        this.app_data.sites.data
-      );
-
+      // update current traj job
+      this.app_data.curr_job = traj_res.curr_job;
       // required mete data check
-      this.app_data.ui_control.mete_required.items = bat_content.mete_data_required.sort();
-      this.app_data.ui_control.mete_required.show = true;
-
+      this.ui_control.mete_required.items = traj_res.mete_required;
+      this.ui_control.mete_required.show = true;
+      // create bat file
       this.$worker
         .run(
           (content) => {
@@ -380,7 +433,7 @@ export default {
             });
             return blob;
           },
-          [bat_content.content]
+          [traj_res.bat_content]
         )
         .then((blob) => {
           var pom = document.createElement("a");
@@ -388,7 +441,7 @@ export default {
           pom.href = url;
           pom.setAttribute("download", "run_hysplit.bat");
           pom.click();
-          this.app_data.ui_control.isLoading = false;
+          this.ui_control.isLoading = false;
         });
     },
     upload_traj() {
@@ -396,16 +449,22 @@ export default {
     },
     onFileChanged(e) {
       // return table name, and lat, lon, alt, for each time stamp
-      data_traj
+      this.app_data.conc_df.traj_task
         .upload_traj(e.target.files[0], this.app_data.curr_job)
         .then((res) => {
+          // console.log(res)
           // this.app_data.traj_data = [];
-          this.app_data.traj_data.push(res);
-          // this.app_data.traj_jobs = [];
-          this.app_data.traj_jobs.push(res.job_name);
+          var new_traj_df = {
+            job_name: res.job_name,
+            df: new dv2_df(),
+          };
+          new_traj_df.df = res.data;
+          this.app_data.traj_data.push(new_traj_df);
+          if (this.app_data.parameters.traj_job == "") {
+            this.app_data.parameters.traj_job = this.app_data.traj_data[0].job_name;
+          }
           console.log(this.app_data.traj_data);
-          console.log(this.app_data.traj_jobs);
-          this.app_data.ui_control.snackbar = {
+          this.ui_control.snackbar = {
             show: true,
             text: "Data Uploaded!",
             color: "success",

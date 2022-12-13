@@ -3,45 +3,36 @@
     <v-layout class="justify-center">
       <v-col lg="9">
         <!-- app header -->
-        <v-card
-          color="secondary"
-          height="100%"
-          :loading="app_data.ui_control.isLoading"
-        >
-          <v-card-title class="justify-left py-5 px-10">
-            <v-icon color="rgba(53, 104, 89, 0.5)" class="mr-n5" size="50"
-              >mdi-grid</v-icon
-            >
-            <v-icon color="primary" size="30" class="ml-n5"
-              >mdi-rhombus-medium</v-icon
-            >
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <div
-                  v-bind="attrs"
-                  v-on="on"
-                  class="font-weight-bold display-2 primary--text ml-6"
-                >
-                  TraPSA
-                </div>
-              </template>
-              <span
-                >Trajectory-based Potential Sourece Apportionment Project</span
-              >
-            </v-tooltip>
-
+        <v-card color="secondary" height="100%" :loading="ui_control.isLoading">
+          <v-card-title class="justify-left py-2 px-0 pr-5">
+            <v-img
+              class="img_logo"
+              src="logo.png"
+              height="100"
+              width="100"
+              contain
+              ele
+            ></v-img>
             <v-spacer></v-spacer>
             <!-- <v-btn dark @click="test">Test</v-btn> -->
-            <v-btn color="primary lighten-2" class="ml-5" @click="open_section">
+            <v-btn
+              color="primary lighten-2"
+              class="ml-5 mt-10"
+              @click="open_section"
+            >
               <v-icon left>mdi-folder-open</v-icon>Open Section
             </v-btn>
-            <v-btn color="primary lighten-2" class="ml-5" @click="save_section">
+            <v-btn
+              color="primary lighten-2"
+              class="ml-5 mt-10"
+              @click="save_section"
+            >
               <v-icon left>mdi-download</v-icon>Save Section
             </v-btn>
             <v-btn
               color="primary lighten-2"
-              class="ml-5"
-              @click="app_data.ui_control.data_view = true"
+              class="ml-5 mt-10"
+              @click="ui_control.data_view = true"
             >
               <v-icon left>mdi-table-multiple</v-icon>Data Summary
             </v-btn>
@@ -53,16 +44,11 @@
               @change="upload_section"
             />
           </v-card-title>
-          <!-- <v-card-subtitle class="justify-left px-12">
-            <div
-              class="subtitle-1 primary--text"
-            >Trajectory-based Potential Sourece Apportionment Project</div>
-          </v-card-subtitle> -->
           <v-divider></v-divider>
 
           <!-- app tabs -->
           <v-tabs
-            v-model="app_data.ui_control.curr_tab"
+            v-model="ui_control.curr_tab"
             background-color="transparent"
             color="primary"
             grow
@@ -72,9 +58,7 @@
             <v-tab v-for="t in tabs" :key="t.index">
               <v-avatar>
                 <v-icon
-                  :color="
-                    app_data.ui_control.curr_tab === t.index ? 'primary' : ''
-                  "
+                  :color="ui_control.curr_tab === t.index ? 'primary' : ''"
                   >{{ t.icon }}</v-icon
                 >
               </v-avatar>
@@ -82,7 +66,7 @@
             </v-tab>
           </v-tabs>
 
-          <v-tabs-items v-model="app_data.ui_control.curr_tab">
+          <v-tabs-items v-model="ui_control.curr_tab">
             <v-tab-item>
               <About />
             </v-tab-item>
@@ -106,16 +90,18 @@
     <!-- app footer -->
     <v-footer height="30">
       <span class="primary--text caption"
-        >Chuanlong Zhou &copy; 2020, Center for Air and Aquatic Resources
-        Engineering and Sciences (CAARES)</span
-      >
+        >Chuanlong Zhou &copy; 2020-2021, Center for Air and Aquatic Resources
+        Engineering and Sciences (<a href="https://www.clarkson.edu/caares"
+          >CAARES</a
+        >)
+      </span>
     </v-footer>
 
     <!-- dialogs -->
     <Message />
     <MetedataDialog />
     <MeteDataRequired />
-    <v-dialog v-model="app_data.ui_control.data_view" width="1000">
+    <v-dialog v-model="ui_control.data_view" width="1000">
       <DataView />
     </v-dialog>
   </v-app>
@@ -123,7 +109,6 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import data_format from "@/assets/js/data_format";
 export default {
   name: "App",
   components: {
@@ -132,14 +117,19 @@ export default {
     Trajectory: () => import("@/components/tabs/Trajectory.vue"),
     Analysis: () => import("@/components/tabs/Analysis.vue"),
     Upload: () => import("@/components/tabs/Upload.vue"),
-    Message: () => import("@/components/dialogs/Message.vue"),
-    MetedataDialog: () => import("@/components/dialogs/MetedataDialog.vue"),
-    MeteDataRequired: () => import("@/components/dialogs/MeteDataRequired.vue"),
-    DataView: () => import("@/components/dialogs/DataView.vue"),
+
+    // information dialogs
+    Message: () => import("@/components/dialogs/infor/Message.vue"),
+    MetedataDialog: () =>
+      import("@/components/dialogs/infor/MetedataDialog.vue"),
+    MeteDataRequired: () =>
+      import("@/components/dialogs/infor/MeteDataRequired.vue"),
+    DataView: () => import("@/components/dialogs/infor/DataView.vue"),
   },
   computed: {
     ...mapState({
       app_data: "app_data",
+      ui_control: "ui_control",
     }),
   },
   mounted() {},
@@ -154,12 +144,12 @@ export default {
     ],
   }),
   methods: {
-    ...mapMutations(["OPENSECTION"]),
+    ...mapMutations(["OPENSECTION", "OPENSECTION_UI"]),
     test() {
-      this.app_data.ui_control.data_view = true;
+      this.ui_control.data_view = true;
     },
     save_section() {
-      this.app_data.ui_control.isLoading = "primary";
+      this.ui_control.isLoading = "primary";
       this.$worker
         .run(
           (content) => {
@@ -167,7 +157,14 @@ export default {
               type: "application/json",
             });
           },
-          [JSON.stringify(this.app_data)]
+          [
+            '{"app_data":' +
+              JSON.stringify(this.app_data) +
+              "," +
+              '"ui_control":' +
+              JSON.stringify(this.ui_control) +
+              "}",
+          ]
         )
         .then((blob) => {
           var pom = document.createElement("a");
@@ -181,8 +178,8 @@ export default {
           pom.href = url;
           pom.setAttribute("download", section);
           pom.click();
-          this.app_data.ui_control.isLoading = false;
-          this.app_data.ui_control.snackbar = {
+          this.ui_control.isLoading = false;
+          this.ui_control.snackbar = {
             show: true,
             text: "Current section is saved!",
             color: "info",
@@ -192,23 +189,34 @@ export default {
     open_section() {
       this.$refs.open_section.click();
     },
-    upload_section(e) {
-      this.app_data.ui_control.isLoading = "primary";
-      data_format.readFileAsync(e.target.files[0]).then((res) => {
-        this.OPENSECTION(JSON.parse(res));
-        this.app_data.ui_control.snackbar = {
+    async upload_section(e) {
+      this.ui_control.isLoading = "primary";
+      await this.readFileAsync(e.target.files[0]).then((res) => {
+        this.OPENSECTION(JSON.parse(res)["app_data"]);
+        this.OPENSECTION_UI(JSON.parse(res)["ui_control"]);
+        this.ui_control.snackbar = {
           show: true,
           text: "Your previous section is loaded!",
           color: "info",
         };
-        this.app_data.ui_control.isLoading = false;
+        this.ui_control.isLoading = false;
+      });
+    },
+    async readFileAsync(file) {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = () => {
+          resolve(reader.result);
+        };
+        reader.onerror = reject;
+        reader.readAsText(file);
       });
     },
   },
 };
 </script>
 
-<style>
+<style  lang="scss">
 .span {
   display: inline-block;
   vertical-align: bottom;
@@ -217,4 +225,33 @@ export default {
   height: 100%;
   width: 100%;
 }
+.img_logo {
+  filter: drop-shadow(0 0 0.2rem rgba(102, 102, 102, 0.5));
+}
+.img_logo:hover {
+  filter: drop-shadow(0 0 0.25rem rgba(3, 184, 99, 0.5));
+}
+
+::-webkit {
+    &-scrollbar {
+      width: 5px;
+      &-track {
+        /* background: transparent; */
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+      }
+    &-thumb {
+        background: #888;
+        /* -webkit-box-shadow: inset 0 0 6px #888;  */
+        border-radius: 12px;
+        background-clip: padding-box;
+        &:hover {
+          /* background: #555; */
+          -webkit-box-shadow: inset 0 0 6px #333;
+        }
+      }
+    }
+  }
+
+
 </style>

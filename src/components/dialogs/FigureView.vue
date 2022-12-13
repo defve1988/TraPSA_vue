@@ -5,7 +5,7 @@
     >
       <span class="font-weight-light"> {{ view_title }}</span>
       <v-spacer></v-spacer>
-      <v-btn icon @click="app_data.ui_control.fig_view.show = false">
+      <v-btn icon @click="ui_control.fig_view.show = false">
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-card-title>
@@ -44,14 +44,10 @@
             </v-tooltip>
           </v-col>
 
-          <v-col
-            cols="4"
-            align-self="end"
-            v-if="view_title=='CPF Analysis'"
-          >
+          <v-col cols="4" align-self="end" v-if="view_title == 'CPF Analysis'">
             <v-slider
               v-model="app_data.parameters.cpf"
-              :label="'Criteria: '+ app_data.parameters.cpf.toFixed(2)"
+              :label="'Criteria: ' + app_data.parameters.cpf.toFixed(2)"
               thumb-color="primary"
               :thumb-label="true"
               color="primary"
@@ -62,14 +58,10 @@
               @change="show_fig()"
             ></v-slider>
           </v-col>
-          <v-col
-            cols="4"
-            align-self="end"
-            v-if="view_title=='CBPF Analysis'"
-          >
+          <v-col cols="4" align-self="end" v-if="view_title == 'CBPF Analysis'">
             <v-slider
               v-model="app_data.parameters.cbpf"
-              :label="'Criteria: '+ app_data.parameters.cbpf.toFixed(2)"
+              :label="'Criteria: ' + app_data.parameters.cbpf.toFixed(2)"
               thumb-color="primary"
               :thumb-label="true"
               color="primary"
@@ -82,9 +74,22 @@
           </v-col>
           <v-spacer></v-spacer>
           <v-col cols="3" align-self="center">
-            <v-btn class="mx-1" color="primary lighten-2" @click="edit_style">
-              Style
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="mx-1"
+                  color="primary lighten-2"
+                  light
+                  @click="edit_style"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Style
+                </v-btn>
+              </template>
+              <span>Coming soon.</span>
+            </v-tooltip>
+
             <v-btn class="mx-1" color="primary lighten-2" @click="export_fig">
               Save
             </v-btn>
@@ -147,6 +152,7 @@ export default {
   computed: {
     ...mapState({
       app_data: "app_data",
+      ui_control: "ui_control",
     }),
     view_title() {
       return this.figs[this.carousel_index].text;
@@ -155,11 +161,11 @@ export default {
       return this.app_data.case.map((x) => x.name);
     },
     fig_view() {
-      return this.app_data.ui_control.fig_view;
+      return this.ui_control.fig_view;
     },
   },
   mounted() {
-    // 1. app_data.ui_control.fig_view (ID or name) >> change from parent, need reset
+    // 1. ui_control.fig_view (ID or name) >> change from parent, need reset
     //  - resect selected data, set carousel_index
     //  - clear all figrues
     // 2. data selection change
@@ -169,8 +175,8 @@ export default {
     //  - display selected data
 
     // make sure first display is correct
-    this.selected = this.app_data.ui_control.fig_view.selected_case_name;
-    this.fig_ID = this.app_data.ui_control.fig_view.id;
+    this.selected = this.ui_control.fig_view.selected_case_name;
+    this.fig_ID = this.ui_control.fig_view.id;
 
     this.plot_case = new PlotCase("fig_view");
     this.reset_fig();
@@ -178,7 +184,7 @@ export default {
   methods: {
     ...mapMutations(["SITESUMMARY"]),
     reset_fig() {
-      this.selected = this.app_data.ui_control.fig_view.selected_case_name;
+      this.selected = this.ui_control.fig_view.selected_case_name;
       this.carousel_index = this.figs.map((x) => x.id).indexOf(this.fig_ID);
       this.show_fig();
     },
@@ -249,7 +255,7 @@ export default {
                 for (var i = 0; i < fig_data.length; i++) {
                   res.push({
                     x: fig_data[i].data.measurement.map(
-                      (x) => new Date(x.TimeString)
+                      (x) => new Date(x.time_stamp)
                     ),
                     y: fig_data[i].data.measurement.map(
                       (x) => x.selected_chemical
@@ -280,7 +286,7 @@ export default {
                 for (var i = 0; i < fig_data.length; i++) {
                   res.push({
                     x: fig_data[i].data.measurement.map(
-                      (x) => new Date(x.TimeString)
+                      (x) => new Date(x.time_stamp)
                     ),
                     y: fig_data[i].data.measurement.map(
                       (x) => x.selected_chemical
@@ -315,7 +321,7 @@ export default {
                 for (var i = 0; i < fig_data.length; i++) {
                   let d = fig_data[i].data.measurement.map((x) => {
                     return {
-                      x: new Date(x.TimeString),
+                      x: new Date(x.time_stamp),
                       y: parseFloat(x.selected_chemical),
                     };
                   });
@@ -383,7 +389,7 @@ export default {
               [this.app_data.parameters.cbpf],
             ])
             .then((res) => {
-              console.log(res.cbpf)
+              // console.log(res.cbpf);
               this.plot_case.plot_cbpf(
                 "fig_detail_" + this.fig_ID,
                 res.cbpf,

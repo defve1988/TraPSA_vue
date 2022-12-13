@@ -4,9 +4,7 @@
       <v-row>
         <v-col cols="3" class="mt-2 px-0">
           <v-card height="725px">
-            <v-card-title
-              class="pa-1 px-4 title primary lighten-2 font-weight-regular white--text"
-            >
+            <v-system-bar :class="ui_control.system_bar_class">
               Research Cases
               <v-spacer></v-spacer>
               <v-tooltip bottom>
@@ -22,17 +20,14 @@
                 </template>
                 <span>Add new research case.</span>
               </v-tooltip>
-            </v-card-title>
+            </v-system-bar>
 
             <v-list dense class="pa-0" v-if="app_data.case.length == 0">
               <v-list-item>No cases exist.</v-list-item>
             </v-list>
 
             <v-list v-else dense class="pa-0">
-              <v-list-item-group
-                v-model="app_data.ui_control.thumb_fig_index"
-                mandatory
-              >
+              <v-list-item-group v-model="ui_control.thumb_fig_index" mandatory>
                 <v-list-item v-for="(item, i) in app_data.case" :key="i">
                   <template v-slot:default="{ active }">
                     <v-list-item-action>
@@ -40,10 +35,10 @@
                     </v-list-item-action>
                     {{ item.name }}
                     <v-spacer></v-spacer>
-                    <v-btn icon @click="edit_case(i)">
+                    <v-btn icon @click="edit_case(i)" @click.native.stop>
                       <v-icon>mdi-pencil-outline</v-icon>
                     </v-btn>
-                    <v-btn icon @click="remove_case(i)">
+                    <v-btn icon @click="remove_case(i)" @click.native.stop>
                       <v-icon>mdi-delete-outline</v-icon>
                     </v-btn>
                   </template>
@@ -68,14 +63,11 @@
                 <v-card
                   :height="fig_height"
                   @click="enlarge(fig.id)"
-                  :elevation="hover ? 16:2"
+                  :elevation="hover ? 16 : 2"
                 >
-                  <v-card-title
-                    class="justify-center pt-2 pa-0 subtitle-1 font-weight-light"
-                    >{{ fig.text }}</v-card-title
+            <v-system-bar :class="ui_control.system_bar_class">
+{{ fig.text }}</v-system-bar
                   >
-
-                  <!-- if no case is selected then display grey blocks -->
                   <v-sheet
                     v-if="!show_case[i]"
                     class="ma-2"
@@ -84,7 +76,11 @@
                     <sheet-footer>No content can be dsiplayed</sheet-footer>
                   </v-sheet>
 
-                  <div :ref="'my_'+fig.id" :id="fig.id" class="my_dataviz mx-0 py-0 my-0"></div>
+                  <div
+                    :ref="'my_' + fig.id"
+                    :id="fig.id"
+                    class="my_dataviz mx-0 py-0 my-0"
+                  ></div>
                 </v-card>
               </v-hover>
             </v-col>
@@ -93,10 +89,10 @@
       </v-row>
     </v-container>
 
-    <v-dialog v-model="app_data.ui_control.new_case.show" width="800">
-      <CaseSelect @data_edited="case_selected"/>
+    <v-dialog v-model="ui_control.new_case.show" width="800">
+      <CaseSelect :select_type="'case'" @data_edited="case_selected" />
     </v-dialog>
-    <v-dialog v-model="app_data.ui_control.fig_view.show" width="1200">
+    <v-dialog v-model="ui_control.fig_view.show" width="1200">
       <FigureView />
     </v-dialog>
   </v-card>
@@ -121,7 +117,7 @@ export default {
             props: {
               color: "rgba(0, 0, 0, .25)",
               dark: true,
-              height: 170,
+              height: 180,
             },
           },
           children
@@ -155,22 +151,23 @@ export default {
   computed: {
     ...mapState({
       app_data: "app_data",
+      ui_control: "ui_control",
     }),
     selected() {
-      return this.app_data.ui_control.thumb_fig_index;
+      return this.ui_control.thumb_fig_index;
     },
   },
   mounted() {},
   methods: {
     add_new_case() {
       if (
-        this.app_data.sites.data.length > 0 &&
-        this.app_data.measurement.data.length > 0
+        this.app_data.sites.df.length > 0 &&
+        this.app_data.conc_df.df.length > 0
       ) {
-        this.app_data.ui_control.new_case.show = true;
-        this.app_data.ui_control.new_case.edit = -1;
+        this.ui_control.new_case.show = true;
+        this.ui_control.new_case.edit = -1;
       } else {
-        this.app_data.ui_control.snackbar = {
+        this.ui_control.snackbar = {
           show: false,
           text: "No data is uploaded, please upload data first.",
           color: "error",
@@ -179,13 +176,16 @@ export default {
     },
     remove_case(index) {
       this.app_data.case = this.app_data.case.filter((x, i) => i != index);
-      if (index >= this.app_data.ui_control.thumb_fig_index) {
-        this.app_data.ui_control.thumb_fig_index -= 1;
+      if (
+        index <= this.ui_control.thumb_fig_index &&
+        this.ui_control.thumb_fig_index > 0
+      ) {
+        this.ui_control.thumb_fig_index -= 1;
       }
     },
     edit_case(index) {
       var select_case = this.app_data.case[index];
-      this.app_data.ui_control.new_case = {
+      this.ui_control.new_case = {
         show: true,
         edit: index,
         selection: {
@@ -201,7 +201,7 @@ export default {
     },
     enlarge(id) {
       var index_temp = this.selected;
-      this.app_data.ui_control.fig_view = {
+      this.ui_control.fig_view = {
         show: true,
         id: id,
         text: this.figs.find((e) => e.id === id).text,
@@ -210,19 +210,20 @@ export default {
     },
     case_selected() {
       // alert(1)
+      // console.log(this.selected)
       var index_temp = this.selected;
       var item = this.app_data.case[index_temp];
       this.plot_case = new PlotCase(item.name);
 
-      var fig_size ={
+      var fig_size = {
         width: this.$refs.my_histgram[0].clientWidth,
-        height: 180,
-      }
-      console.log(fig_size)
-      var fig_margin = { r: 20, t: 25, b: 25, l: 30 }
-      this.plot_case.set_fig_size("small", fig_size, fig_margin)
+        height: 200,
+      };
+      // console.log(fig_size)
+      var fig_margin = { r: 20, t: 25, b: 25, l: 30 };
+      this.plot_case.set_fig_size("small", fig_size, fig_margin);
 
-      this.app_data.ui_control.isLoading = "primary lighten-2";
+      this.ui_control.isLoading = "primary lighten-2";
 
       // plot 1: histgram
       this.$worker
@@ -245,7 +246,7 @@ export default {
       this.$worker
         .run(
           (measurement) => {
-            let x = measurement.map((x) => new Date(x.TimeString));
+            let x = measurement.map((x) => new Date(x.time_stamp));
             let y = measurement.map((x) => x.selected_chemical);
             return { x: x, y: y };
           },
@@ -264,7 +265,7 @@ export default {
       this.$worker
         .run(
           (measurement) => {
-            let x = measurement.map((x) => new Date(x.TimeString));
+            let x = measurement.map((x) => new Date(x.time_stamp));
             let y = measurement.map((x) => x.selected_chemical);
             return { x: x, y: y };
           },
@@ -284,7 +285,7 @@ export default {
       this.$worker
         .run(
           (measurement) => {
-            let x = measurement.map((x) => new Date(x.TimeString));
+            let x = measurement.map((x) => new Date(x.time_stamp));
             let y = measurement.map((x) => x.selected_chemical);
             return { x: x, y: y };
           },
@@ -304,7 +305,7 @@ export default {
       this.$worker
         .run(
           (measurement) => {
-            let x = measurement.map((x) => new Date(x.TimeString));
+            let x = measurement.map((x) => new Date(x.time_stamp));
             let y = measurement.map((x) => x.selected_chemical);
             return { x: x, y: y };
           },
@@ -323,7 +324,7 @@ export default {
       // plot 6: averaged line plot with sen's slope
       let d = item.data.measurement.map((x) => {
         return {
-          x: new Date(x.TimeString),
+          x: new Date(x.time_stamp),
           y: parseFloat(x.selected_chemical),
         };
       });
@@ -348,7 +349,7 @@ export default {
             "small"
           );
           if (!item.data.wind.length > 0) {
-            this.app_data.ui_control.isLoading = false;
+            this.ui_control.isLoading = false;
           }
         });
 
@@ -374,7 +375,7 @@ export default {
             // plot 9: CBPF
             this.show_case.splice(8, 1, true);
             this.plot_case.plot_cbpf("cbpf", res.cbpf, "small");
-            this.app_data.ui_control.isLoading = false;
+            this.ui_control.isLoading = false;
           });
       }
     },

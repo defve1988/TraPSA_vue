@@ -1,0 +1,239 @@
+{
+    "histnorm": {
+        "name": "mode",
+        "attr_name": "histnorm",
+        "props": null,
+        "props_detail": {
+            "ui": "select",
+            "range": [
+                "count",
+                "prob"
+            ],
+            "value": "count"
+        }
+    },
+    "scatter_mode": {
+        "name": "mode",
+        "attr_name": "scatter_mode",
+        "props": null,
+        "props_detail": {
+            "ui": "select",
+            "range": [
+                "marker",
+                "line",
+                "marker+line"
+            ],
+            "value": "marker"
+        }
+    },
+    "line_width": {
+        "name": "width",
+        "attr_name": "width",
+        "props": null,
+        "props_detail": {
+            "ui": "slider",
+            "range": [
+                0,
+                10
+            ],
+            "value": 1
+        }
+    },
+    "line": {
+        "name": "line",
+        "attr_name": "line",
+        "props": [
+            "line_width",
+            "color"
+        ]
+    },
+    "marker_size": {
+        "name": "size",
+        "attr_name": "size",
+        "props": null,
+        "props_detail": {
+            "ui": "slider",
+            "range": [
+                1,
+                30
+            ],
+            "value": 5
+        }
+    },
+    "marker": {
+        "name": "marker",
+        "attr_name": "marker",
+        "props": [
+            "marker_size",
+            "color",
+            "line"
+        ]
+    },
+    "color": {
+        "name": "color",
+        "attr_name": "color",
+        "props": [
+            "hex_color",
+            "opacity"
+        ]
+    },
+    "hex_color": {
+        "name": "color",
+        "attr_name": "hex_color",
+        "props": null,
+        "props_detail": {
+            "ui": "color_picker",
+            "range": null,
+            "value": "#1E88E5"
+        }
+    },
+    "opacity": {
+        "name": "opacity",
+        "attr_name": "opacity",
+        "props": null,
+        "props_detail": {
+            "ui": "slider",
+            "range": [
+                0,
+                1
+            ],
+            "value": 0.7
+        }
+    },
+    "font": {
+        "name": "font",
+        "attr_name": "font",
+        "props": [
+            "font_size",
+            "family",
+            "color"
+        ]
+    },
+    "font_size": {
+        "name": "size",
+        "attr_name": "size",
+        "props": null,
+        "props_detail": {
+            "ui": "slider",
+            "range": [
+                0,
+                20
+            ],
+            "value": 12
+        }
+    },
+    "family": {
+        "name": "family",
+        "attr_name": "family",
+        "props": null,
+        "props_detail": {
+            "ui": "select",
+            "range": [
+                "sans serif",
+                "Courier New, monospace"
+            ],
+            "value": "sans serif"
+        }
+    },
+    "title": {
+        "name": "title",
+        "attr_name": "title",
+        "props": [
+            "text",
+            "font"
+        ]
+    },
+    "text": {
+        "name": "text",
+        "attr_name": "text",
+        "props": null,
+        "props_detail": {
+            "ui": "textfiled",
+            "range": null,
+            "value": ""
+        }
+    },
+    "fig_margin": {
+        "name": "margin",
+        "attr_name": "fig_margin",
+        "props": [
+            "margin-padding"
+        ]
+    },
+    "margin-padding": {
+        "name": "margin",
+        "attr_name": "margin",
+        "props": [
+            "margin-top",
+            "margin-bottom",
+            "margin-left",
+            "margin-right",
+            "padding"
+        ]
+    },
+    "margin-top": {
+        "name": "top",
+        "attr_name": "t",
+        "props": null,
+        "props_detail": {
+            "ui": "slider",
+            "range": [
+                0,
+                200
+            ],
+            "value": 50
+        }
+    },
+    "margin-bottom": {
+        "name": "bottom",
+        "attr_name": "b",
+        "props": null,
+        "props_detail": {
+            "ui": "slider",
+            "range": [
+                0,
+                200
+            ],
+            "value": 50
+        }
+    },
+    "margin-left": {
+        "name": "left",
+        "attr_name": "l",
+        "props": null,
+        "props_detail": {
+            "ui": "slider",
+            "range": [
+                0,
+                200
+            ],
+            "value": 50
+        }
+    },
+    "margin-right": {
+        "name": "right",
+        "attr_name": "r",
+        "props": null,
+        "props_detail": {
+            "ui": "slider",
+            "range": [
+                0,
+                200
+            ],
+            "value": 50
+        }
+    },
+    "padding": {
+        "name": "padding",
+        "attr_name": "pad",
+        "props": null,
+        "props_detail": {
+            "ui": "slider",
+            "range": [
+                0,
+                100
+            ],
+            "value": 10
+        }
+    }
+}

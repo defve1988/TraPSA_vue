@@ -1,3 +1,5 @@
+import { cos } from "mathjs"
+
 export default {
     linearRegression,
     getStandardDeviation,
@@ -15,6 +17,8 @@ export default {
 function data_cal_pscf() {
 
 }
+
+// note: make sure processed data are all float
 
 function data_cal_cpf(measurement, wind, threshold = 0.7) {
     var directions = [
@@ -64,6 +68,8 @@ function data_cal_cpf(measurement, wind, threshold = 0.7) {
     cbpf_high = cbpf_high.map((x, index) => { return { speed: index + 1, r: Array(16).fill(0) } })
     cbpf_all = cbpf_all.map((x, index) => { return { speed: index + 1, r: Array(16).fill(0) } })
 
+    // console.log(max_wind_speed, cbpf_high)
+
     var count_high = 0
     var count_all = 0
 
@@ -71,7 +77,7 @@ function data_cal_cpf(measurement, wind, threshold = 0.7) {
     for (let i = 0; i < wind.length; i++) {
         WD = wind[i].wind_direction
         WS = wind[i].wind_speed
-        conc = measurement.find(x => x.TimeString == wind[i].TimeString)
+        conc = measurement.find(x => x.time_stamp == wind[i].time_stamp)
         if (WD !== null && WS !== null && conc !== undefined) {
             conc = conc.selected_chemical
             if (WD > 348.75) { Dir_index = 0 }
@@ -90,6 +96,8 @@ function data_cal_cpf(measurement, wind, threshold = 0.7) {
                     break;
                 }
             }
+
+            // console.log(cbpf_all, Level)
 
             cbpf_all[Level].r[Dir_index] += 1
             count_all += 1

@@ -1,82 +1,43 @@
-const state = {
-    // analysis parameters
-    parameters:{
-        cpf:0.9,
-        cbpf:0.9,
-    },
-    // ui control
-    ui_control: {
-        isLoading: false,
-        map_loading: false,
-        data_view: false,
-        curr_tab: 0,
-        new_case:
-        {
-            show: false,
-            edit: -1,
-            selection: {
-                case_name: "New Case",
-                site: [],
-                chemical: [],
-                // traj_job: [],
-                year: [],
-                month: ["Spring", "Summer", "Autumn", "Winter"],
-                hour: [
-                    "Morning rush hours (6:00-9:00)",
-                    "Daytime hours (10:00-16:00)",
-                    "Afternoon rush hours (15:00-20:00)",
-                    "Night hours (21:00-5:00)",
-                ],
-            },
-        },
-        // selected case for display 9 figures
-        thumb_fig_index:"",
-        fig_view: { 
-            show: false, 
-            id: "", 
-            selected_case_name:[],
-            text:'',
-        },
-        snackbar: { show: true, text: 'Thanks for using TraPSA!', color: 'info' },
-        mete_dialog: false,
-        mete_required: { show: false, items: [] },
-        dateformat: {
-            show: false,
-            text: [
-                {}
-            ]
-        },
+import dv2_df from "@/dv2/dv2_df"
+// import dv2_props from "@/dv2/dv2_props"
 
-        // add PSCF
-        new_source_layer:{
-            show:false,
-            eidt:-1, 
-        }
-    },
-    // HYSPLIT parameters displayed in UI
-    hysplit: {
-        working: "C:\\Users\\zhouc\\Desktop\\python\\TraPSA\\HYSPLIT",
-        sites: [],
-        start_time: { isExpand: false, sample_period: null, expand_number: null },
-        height_type: ["Height above ground", "Relative to mean sea level", "Fraction of the mixed layer"],
-        start_height: { value_type: "Height above ground", value: 500 },
-        trajectory_time: -24,
-        mete: {
-            type: "NCEP/NCAR",
-            path: "C:\\Users\\zhouc\\Desktop\\python\\TraPSA\\data\\mete_data\\GBL"
-        },
-        mete_types: ["NCEP/NCAR", "GDAS1", "GDAS0p5", "EDAS40", "NARR"],
+const state = {
+    // define the missing data in the uploaded files
+    missing_data: "-999,NaN,,",
+    // data df
+    sites: new dv2_df(),
+    conc_df: new dv2_df(),
+    traj_data: [],
+    // traj_data:[{job_name:"", df: dv2_df}]
+
+    // save the uploaded files for df merge
+    upload_files: [],
+    // analysis parameters
+    parameters: {
+        dialog_show:false,
+        model:"PSCF",
+        cpf: 0.9,
+        cbpf: 0.9,
+        pscf:0.8,
+        grid_size:1,
+        traj_job: "",
+        weight:[
+            { n: 0.25, w: 0.1 },
+            { n: 0.5, w: 0.25 },
+            { n: 0.75, w: 0.5 },
+            { n: 1, w: 0.75 },
+            { n: 1.5, w: 0.9 },
+        ],
     },
     // curr_job is actually the last job.
     curr_job: {
         csv_file: "",
         job_name: "",
-        start_point: [
-            {
-                timestamp: null,
-                site_name: null,
-                TimeString: null,
-            }],
+        start_point: [{
+            time_stamp: null,
+            site_name: null,
+            traj_time_stamp: null,
+        }],
         trajectory_time: null,
         height: null,
         kmsl: null,
@@ -84,33 +45,11 @@ const state = {
         mete_folder: "",
         mete_type: ""
     },
-    // define the missing data in the uploaded files
-    missing_data: "",
-    // define the site data used in the app
-    sites: {
-        header: [
-            {
-                text: "site_name",
-                align: "start",
-                value: "site_name",
-            },
-            {
-                text: "lon",
-                value: "lon",
-            },
-            {
-                text: "lat",
-                value: "lat",
-            },
 
-        ],
-        data: [
-        ],
-    },
+
     // define the measurement data used in the app
     measurement: {
-        header: [
-            {
+        header: [{
                 text: "timestamp",
                 value: "timestamp",
             },
@@ -135,8 +74,7 @@ const state = {
 
     // define the wind data used in the app,{ID	timestamp	site_name	wind_speed	wind_direction}
     wind_data: {
-        header: [
-            {
+        header: [{
                 text: "timestamp",
                 value: "timestamp",
             },
@@ -154,8 +92,7 @@ const state = {
             },
 
         ],
-        data: [
-        ],
+        data: [],
     },
     // traj_data: [{
     //     job_name: "",
@@ -168,8 +105,6 @@ const state = {
     //         alt: [],
     //     }]
     // }]
-    traj_data: [],
-    traj_jobs: [],
     // site_summary: [{
     //     name: "",
     //     location: [lat, lon],
@@ -217,19 +152,22 @@ const state = {
 
     ],
 
+    source_case:[
+
+    ],
+
     // map layers
     // selected with 1. case/select data, 2.trajectory job, 3. method
     // trajectory clusters
     // text/markers
-    map_layers:[
-        {
-            name:'111'
+    map_layers: [{
+            name: '111'
         },
         {
-            name:'222'
+            name: '222'
         },
         {
-            name:'333'
+            name: '333'
         }
     ],
 };
@@ -245,8 +183,27 @@ const actions = {
 const mutations = {
     // open previous section, set all the parameters
     OPENSECTION: (state, res) => {
+        var df_index = ["sites", "conc_df"]
         for (var i in res) {
-            state[i] = res[i]
+            if (df_index.includes(i)) {
+                state[i].df = res[i].df
+                state[i].attrs = res[i].attrs
+                state[i].table_header = res[i].table_header
+            } else if (i == "traj_data") {
+                res[i].forEach(j => {
+                    var temp = {
+                        job_name: j.job_name,
+                        df: new dv2_df(),
+                    }
+                    temp.df = j.df
+                    state[i].push(temp)
+                })
+            } else if (i == "upload_files") {
+                // if the section is resumed, no need to load old data files
+                state[i] = []
+            } else {
+                state[i] = res[i]
+            }
         }
 
         // re-initilze new variables
@@ -255,17 +212,28 @@ const mutations = {
     // generate site summary
     SITESUMMARY: (state) => {
         var site_summary = []
-        for (var i in state.sites.data) {
+        // console.log(state.sites.df)
+        // console.log(state.conc_df.df)
+        // console.log(state.traj_data)
+
+        var site_keys = ["site_name", "time_stamp",]
+        var wind_keys = ["wind_direction", "wind_speed",]
+
+        state.sites.df.forEach( site => {
             // find out site_name
-            var site_name = state.sites.data[i].site_name
+            var site_name = site.site_name
             // do measurement
-            var M = state.measurement.data.filter((x) => { return x.site_name == site_name })
+            var M = state.conc_df.df.filter((x) => {
+                return x.site_name == site_name
+            })
             var prev = {}
-            var header = Object.keys(M[0])
+            var header = state.conc_df.attrs
             var chemical_name = []
+            // console.log(header)
+
             for (var k in header) {
                 var h = header[k]
-                if (h.toLowerCase() != "id" && h.toLowerCase() != "timestamp" && h.toLowerCase() != "site_name" && h.toLowerCase() != "timestring") {
+                if ( !site_keys.includes(h.toLowerCase()) && !wind_keys.includes(h.toLowerCase())) {
                     prev[h] = {
                         name: h,
                         record: null,
@@ -277,6 +245,9 @@ const mutations = {
                     chemical_name.push(h)
                 }
             }
+
+            // console.log(chemical_name)
+            // console.log(prev)
 
             var chemicals = M.reduce(function (prev, current) {
                 for (var k in chemical_name) {
@@ -291,59 +262,62 @@ const mutations = {
                         if (value < prev[c].min) {
                             prev[c].min = value
                         }
-                    }
-                    else {
+                    } else {
                         prev[c].missing += 1
                     }
                 }
                 return prev
             }, prev)
 
-            // console.log(chemicals)
-            // console.log(chemicals["O3"])
-
             for (var cc in chemicals) {
                 chemicals[cc].mean = chemicals[cc].mean / chemicals[cc].record
             }
+
+            // console.log(chemicals)
+
 
             var wind = {
                 record: 0,
                 missing: 0,
             }
-            var W = state.wind_data.data.filter((x) => { return x.site_name == site_name })
-            wind = W.reduce(function (prev, current) {
+
+            wind = M.reduce(function (prev, current) {
                 if (current["wind_speed"] != null && current["wind_direction"] != null) {
                     prev.record += 1
-                }
-                else {
+                } else {
                     prev.missing += 1
                 }
                 return prev
             }, wind)
 
+            // console.log(wind)
+
             var traj = {
                 num: 0,
                 jobs: []
             }
-            for (var t in state.traj_data) {
-                var T = state.traj_data[t].data.filter((x) => { return x.site_name == site_name })
+            state.traj_data.forEach(t=> {
+                var T = t.df.filter((x) => {
+                    return x.site_name == site_name
+                })
                 if (T.length > 0) {
                     traj.num += 1
-                    traj.jobs.push(state.traj_data[t].job_name)
+                    traj.jobs.push(t.job_name)
                 }
-            }
+            })
 
             var item = {
                 site_name: site_name,
-                location: [state.sites.data[i].lat, state.sites.data[i].lon],
+                location: [site.lat, site.lon],
                 chemicals: chemicals,
                 wind: wind,
                 traj: traj
             }
+            // console.log(item)
+
             site_summary.push(item)
-        }
+        })
         // console.log("site_summary", site_summary)
-        // console.log(site_summary[0].traj.jobs[0])
 
         state.site_summary = site_summary;
     },

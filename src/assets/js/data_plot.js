@@ -18,7 +18,7 @@ export default class PlotCase {
     constructor(case_name) {
         this.case_name = case_name;
 
-        this.small_fig = { width: 300, height: 180 }
+        this.small_fig = { width: 300, height: 200 }
         this.medium_fig = { width: 750, height: 400 }
         this.large_fig = { width: 1180, height: 600 }
 
