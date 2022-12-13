@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import app_data from './modules/App_data.js'
-import ui_control from './modules/Ui_control.js'
-import plot_data from './modules/Plot_data.js'
+import app_data from './modules/app_data.js'
+import ui_control from './modules/ui_control.js'
+import plot_data from './modules/plot_data.js'
 
 Vue.use(Vuex)
 
